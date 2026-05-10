@@ -112,19 +112,17 @@ If `npm run build && npm start` works locally and the SW caches `/`, the PWA ins
 
 ## 4. Push to GitHub
 
+**Already done.** Repo is live at <https://github.com/PCGstudent/pg_smartenergy> (private).
+
+Initial commit `26cf93b` — 106 files, 23 590 insertions. To push future changes:
+
 ```powershell
-git init
 git add .
-git commit -m "Voltwise MVP: Auditor + Smart Guard + PWA + Offline + i18n"
-git branch -M main
-git remote add origin git@github.com:YOUR-USER/voltwise.git
-git push -u origin main
+git commit -m "your message"
+git push
 ```
 
-`.gitignore` already excludes `.env.local`, `node_modules`, `.next`, Serwist artifacts (`public/sw.js*`, `public/workbox-*.js`), `drizzle/`, and `.vercel`. Double-check before pushing:
-```powershell
-git status --ignored
-```
+`.gitignore` excludes `.env.local`, `node_modules`, `.next`, Serwist artifacts (`public/sw.js*`, `public/workbox-*.js`), `drizzle/`, and `.vercel`.
 
 ---
 
