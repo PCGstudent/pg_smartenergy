@@ -4,6 +4,7 @@ import { getDb } from '@/lib/db/client'
 import { marketPrices } from '@/lib/db/schema'
 import { upsertMarketPrices } from '@/lib/db/queries'
 import { fetchOmieFile, parseOmie, toMarketPriceInserts } from './omie'
+import { fetchEnergyChartsDay } from './energycharts'
 
 export interface BackfillResult {
   attempted: number
@@ -48,11 +49,17 @@ export async function backfillOmieRange(
       const rows = parseOmie(text, d)
       await upsertMarketPrices(toMarketPriceInserts(rows))
       result.fetched++
-    } catch (err) {
-      result.failed.push({
-        date: key,
-        error: err instanceof Error ? err.message : String(err),
-      })
+    } catch (omieErr) {
+      try {
+        const inserts = await fetchEnergyChartsDay(d)
+        await upsertMarketPrices(inserts)
+        result.fetched++
+      } catch (ecErr) {
+        result.failed.push({
+          date: key,
+          error: `OMIE: ${omieErr instanceof Error ? omieErr.message : String(omieErr)} | EC: ${ecErr instanceof Error ? ecErr.message : String(ecErr)}`,
+        })
+      }
     }
   }
   return result

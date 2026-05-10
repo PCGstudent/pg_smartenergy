@@ -1,7 +1,8 @@
 import { addDays, formatISO } from 'date-fns'
 import { fromZonedTime, toZonedTime } from 'date-fns-tz'
 import { upsertMarketPrices } from '@/lib/db/queries'
-import { fetchOmieFile, parseOmie, toMarketPriceInserts } from '@/lib/ingestion/omie'
+import { fetchOmieFile, parseOmie, toMarketPriceInserts, OmieFetchError } from '@/lib/ingestion/omie'
+import { fetchEnergyChartsDay } from '@/lib/ingestion/energycharts'
 import { createSupabaseService } from '@/lib/supabase/server'
 import { runAudit } from '@/lib/auditor/audit'
 import { evaluateAndDispatchAll } from '@/lib/alerts/dispatch'
@@ -26,34 +27,38 @@ export const ingestOmieDaily = inngest.createFunction(
       ).toISOString()
     })
 
-    const text = await step.run('fetch-omie', async () => {
-      return fetchOmieFile(new Date(targetDate))
-    })
-
-    await step.run('archive-raw', async () => {
-      const supa = createSupabaseService()
-      const path = `omie/marginalpdbc_${(targetDate as string).slice(0, 10)}.1`
-      const { error } = await supa.storage
-        .from('raw')
-        .upload(path, new Blob([text], { type: 'text/plain' }), {
-          upsert: true,
-          contentType: 'text/plain',
-        })
-      if (error && !/already exists/i.test(error.message)) {
-        // Don't fail the whole job — archival is best-effort.
+    const { inserted, source } = await step.run('fetch-parse-upsert', async () => {
+      const date = new Date(targetDate as string)
+      try {
+        const text = await fetchOmieFile(date)
+        // Archive raw file (best-effort).
+        try {
+          const supa = createSupabaseService()
+          const path = `omie/marginalpdbc_${(targetDate as string).slice(0, 10)}.1`
+          await supa.storage
+            .from('raw')
+            .upload(path, new Blob([text], { type: 'text/plain' }), {
+              upsert: true,
+              contentType: 'text/plain',
+            })
+        } catch {
+          // eslint-disable-next-line no-console
+          console.warn('[ingest-omie] archive failed')
+        }
+        const rows = parseOmie(text, date)
+        const count = (await upsertMarketPrices(toMarketPriceInserts(rows))).count
+        return { inserted: count, source: 'OMIE' }
+      } catch (omieErr) {
+        if (!(omieErr instanceof OmieFetchError)) throw omieErr
         // eslint-disable-next-line no-console
-        console.warn('[ingest-omie] archive failed:', error.message)
+        console.warn('[ingest-omie] OMIE unavailable, falling back to Energy-Charts:', (omieErr as Error).message)
+        const inserts = await fetchEnergyChartsDay(date)
+        const count = (await upsertMarketPrices(inserts)).count
+        return { inserted: count, source: 'ENERGY_CHARTS' }
       }
     })
 
-    const inserted = await step.run('parse-and-upsert', async () => {
-      const rows = parseOmie(text, new Date(targetDate))
-      const inserts = toMarketPriceInserts(rows)
-      const result = await upsertMarketPrices(inserts)
-      return result.count
-    })
-
-    return { targetDate, inserted }
+    return { targetDate, inserted, source }
   },
 )
 
@@ -70,12 +75,22 @@ export const ingestOmieManual = inngest.createFunction(
       ? new Date(`${event.data.date}T00:00:00Z`)
       : new Date()
 
-    const text = await step.run('fetch', () => fetchOmieFile(date))
-    const inserted = await step.run('parse-upsert', async () => {
-      const rows = parseOmie(text, date)
-      return (await upsertMarketPrices(toMarketPriceInserts(rows))).count
+    const { inserted, source } = await step.run('fetch-parse-upsert', async () => {
+      try {
+        const text = await fetchOmieFile(date)
+        const rows = parseOmie(text, date)
+        const count = (await upsertMarketPrices(toMarketPriceInserts(rows))).count
+        return { inserted: count, source: 'OMIE' }
+      } catch (omieErr) {
+        if (!(omieErr instanceof OmieFetchError)) throw omieErr
+        // eslint-disable-next-line no-console
+        console.warn('[ingest-omie-manual] OMIE unavailable, falling back to Energy-Charts:', (omieErr as Error).message)
+        const inserts = await fetchEnergyChartsDay(date)
+        const count = (await upsertMarketPrices(inserts)).count
+        return { inserted: count, source: 'ENERGY_CHARTS' }
+      }
     })
-    return { date: formatISO(date, { representation: 'date' }), inserted }
+    return { date: formatISO(date, { representation: 'date' }), inserted, source }
   },
 )
 
