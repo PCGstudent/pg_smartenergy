@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Voltwise — Fintech Luxury (dark by default, but tokens stay coherent) */
+    --background: 220 14% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 220 14% 7%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 220 14% 7%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 142 70% 55%;       /* electric green — savings, action */
+    --primary-foreground: 220 14% 4%;
+
+    --secondary: 220 14% 14%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 220 14% 12%;
+    --muted-foreground: 220 9% 60%;
+
+    --accent: 220 14% 16%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 65%;     /* spike red */
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 14% 14%;
+    --input: 220 14% 14%;
+    --ring: 142 70% 55%;
+
+    /* Voltwise brand tokens */
+    --electric: 142 70% 55%;
+    --gold: 45 100% 65%;
+    --spike: 0 84% 65%;
+
+    --radius: 0.875rem;
+  }
+
+  /* Force dark — the brand IS dark. Light mode is for Phase 2. */
+  html {
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html, body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  body {
+    background-image:
+      radial-gradient(circle at 0% 0%, hsl(var(--electric) / 0.05), transparent 40%),
+      radial-gradient(circle at 100% 0%, hsl(var(--gold) / 0.04), transparent 40%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background-color: hsl(var(--electric) / 0.3);
+  }
+}
+
+@layer components {
+  .glow-electric {
+    box-shadow: 0 0 0 1px hsl(var(--electric) / 0.3),
+      0 8px 30px -8px hsl(var(--electric) / 0.4);
+  }
+  .glow-gold {
+    box-shadow: 0 0 0 1px hsl(var(--gold) / 0.3),
+      0 8px 30px -8px hsl(var(--gold) / 0.4);
+  }
+  .glow-spike {
+    box-shadow: 0 0 0 1px hsl(var(--spike) / 0.3),
+      0 8px 30px -8px hsl(var(--spike) / 0.4);
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+  .gradient-text-electric {
+    background: linear-gradient(135deg, hsl(var(--electric)) 0%, hsl(var(--gold)) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}

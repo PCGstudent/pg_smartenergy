@@ -1,0 +1,27 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "regions": ["fra1"],
+  "functions": {
+    "src/app/api/inngest/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/ingest/omie/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/prices/today/route.ts": {
+      "maxDuration": 15
+    },
+    "src/app/auth/callback/route.ts": {
+      "maxDuration": 15
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    }
+  ]
+}

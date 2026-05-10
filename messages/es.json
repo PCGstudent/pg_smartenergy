@@ -1,0 +1,306 @@
+{
+  "common": {
+    "appName": "Voltwise",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "signedIn": "Sesión iniciada",
+    "dashboard": "Panel",
+    "auditor": "Auditor",
+    "alerts": "Alertas",
+    "settings": "Ajustes",
+    "language": "Idioma",
+    "country": {
+      "PT": "Portugal",
+      "ES": "España"
+    },
+    "actions": {
+      "tryAgain": "Reintentar",
+      "back": "Volver",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "notNow": "Ahora no"
+    }
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "auditor": "Auditor",
+    "alerts": "Alertas",
+    "signIn": "Iniciar sesión"
+  },
+  "landing": {
+    "badge": "Energía ibérica, descifrada",
+    "headline": {
+      "before": "Deja de ser víctima de tu",
+      "highlight": "factura de la luz",
+      "after": "."
+    },
+    "subheadline": "Voltwise lee OMIE en tiempo real, audita tu factura con IA y te dice exactamente cuándo poner el lavavajillas — en euros, no en megavatios-hora.",
+    "ctas": {
+      "livePrices": "Ver precios en directo",
+      "auditBill": "Auditar mi última factura"
+    },
+    "tagline": "Hecho para España y Portugal · OMIE, REE & E-Redes",
+    "features": {
+      "oracle": {
+        "title": "El Oráculo",
+        "body": "Precios OMIE hora a hora para España y Portugal, con Horas Doradas y Rojas resaltadas automáticamente."
+      },
+      "auditor": {
+        "title": "El Auditor",
+        "body": "Sube el PDF de Endesa o EDP. Extraemos cada kWh y te demostramos cuánto puedes ahorrar."
+      },
+      "smartGuard": {
+        "title": "Guardián",
+        "body": "Notificaciones push y WhatsApp cuando la energía está gratis — o a punto de dispararse."
+      },
+      "autoPilot": {
+        "title": "Piloto Automático",
+        "body": "Conecta un enchufe Shelly o Tuya y deja que Voltwise programe tus electrodomésticos."
+      }
+    },
+    "closer": {
+      "headline": "Un PDF. Dos minutos. Dinero real de vuelta.",
+      "body": "La mayoría de hogares ibéricos tienen una tarifa fija que cuesta ~30% más que la indexada. Descúbrelo — gratis, sin tarjeta, sin llamadas.",
+      "ctas": {
+        "audit": "Hacer mi auditoría gratis",
+        "prices": "Ver los precios de hoy primero"
+      }
+    }
+  },
+  "dashboard": {
+    "kicker": "MIBEL en directo · {country}",
+    "title": "El tiempo energético de hoy",
+    "volatility": {
+      "title": "Volatilidad",
+      "spreadSuffix": "% de amplitud",
+      "spreadDetail": "La hora más barata es {x}× más barata que el pico.",
+      "lowest": "Mínimo",
+      "peak": "Pico"
+    },
+    "chart": {
+      "title": "Próximas 36 horas",
+      "subtitle": "Precio mayorista hora a hora · Hora de Madrid"
+    },
+    "footnote": "Datos del mercado diario OMIE. Las comparaciones de tarifa no incluyen el término fijo de potencia ni impuestos, salvo que tu factura haya sido auditada.",
+    "empty": {
+      "badge": "Aún no hay precios importados",
+      "titlePT": "Importa el feed OMIE de hoy para ver Portugal en directo",
+      "titleES": "Importa el feed OMIE de hoy para ver España en directo",
+      "description": "Voltwise descarga la subasta diaria de OMIE todos los días a las 14:30 (hora de Madrid). Para rellenar histórico o lanzar la primera sincronización ahora, llama al endpoint manual.",
+      "ctaSource": "Fuente OMIE",
+      "ctaHome": "Volver al inicio"
+    }
+  },
+  "userMenu": {
+    "trigger": "Cuenta",
+    "language": "Idioma",
+    "languageSet": "Idioma cambiado a {language}"
+  },
+  "offline": {
+    "title": "Las luces están encendidas, la línea está caída.",
+    "body": "Voltwise no puede llegar a la red ahora mismo. Tus últimos precios y auditorías en caché siguen disponibles. Pídele un pronóstico fresco en cuanto vuelvas a estar online.",
+    "ctas": {
+      "tryAgain": "Reintentar",
+      "viewAudits": "Ver auditorías en caché"
+    },
+    "tip": "Tip: Voltwise se recarga solo en cuanto vuelve la conexión."
+  },
+  "install": {
+    "android": {
+      "title": "Instalar Voltwise",
+      "body": "Un toque. Icono en tu pantalla de inicio, notificaciones push, carga más rápida.",
+      "cta": "Instalar"
+    },
+    "ios": {
+      "title": "Añade Voltwise a tu pantalla de inicio",
+      "before": "Toca",
+      "share": "Compartir",
+      "and": ", luego",
+      "addToHome": "Añadir a la pantalla de inicio",
+      "after": ". iOS solo envía notificaciones push a PWAs instaladas."
+    }
+  },
+  "auditor": {
+    "kicker": "El Auditor",
+    "title": "Suelta una factura. Mira lo que ahorras.",
+    "subtitle": "Sube tu último PDF de Endesa / Iberdrola / EDP / Naturgy. Gemini lee cada línea, replicamos tu consumo contra los precios OMIE actuales y te decimos — al euro — cuánto habrías pagado en una tarifa más inteligente.",
+    "newAudit": {
+      "title": "Nueva auditoría",
+      "description": "Solo PDF · máx 10 MB · nunca compartimos tu factura · procesada en ~30 segundos."
+    },
+    "pastAudits": "Auditorías anteriores",
+    "noAudits": "Aún sin auditorías. Sube tu primera factura arriba.",
+    "pendingExtraction": "Extracción pendiente",
+    "status": {
+      "done": "Completada",
+      "failed": "Falló",
+      "processing": "Procesando…"
+    },
+    "upload": {
+      "dropHere": "Arrastra el PDF de la factura aquí",
+      "orClick": "o haz clic para buscar",
+      "buttonIdle": "Auditar esta factura",
+      "buttonUploading": "Subiendo…",
+      "buttonFinalizing": "Iniciando auditoría…",
+      "privacy": "Guardamos tu PDF en privado en tu propia carpeta. La IA nunca lo lee dos veces — la extracción ocurre una vez y luego solo guardamos los campos estructurados.",
+      "errors": {
+        "pdfOnly": "Solo PDF.",
+        "tooLarge": "Máximo 10 MB.",
+        "pickFirst": "Elige un PDF primero.",
+        "uploadFailed": "La subida falló."
+      }
+    },
+    "processing": {
+      "title": "Auditando tu factura",
+      "subtitle": "Normalmente lleva 20–40 segundos. Recargamos automáticamente cuando esté lista.",
+      "steps": {
+        "1": "Leyendo el PDF con Gemini",
+        "2": "Cargando precios OMIE del periodo",
+        "3": "Replicando tu consumo hora a hora",
+        "4": "Ejecutando comparaciones de tarifas"
+      },
+      "invoiceId": "ID de factura:"
+    },
+    "failed": {
+      "title": "La auditoría falló",
+      "unknownError": "Error desconocido.",
+      "tip": "Prueba un escaneo más nítido u otra factura. El PDF sigue guardado en tu carpeta."
+    },
+    "incomplete": {
+      "title": "Auditoría incompleta",
+      "body": "La factura se extrajo pero no se generó ninguna comparación. Inténtalo de nuevo."
+    },
+    "result": {
+      "back": "← Todas las auditorías",
+      "syntheticBadge": "perfil sintético",
+      "realDataBadge": "datos horarios reales",
+      "winHeadlinePrefix": "Pagaste de más ",
+      "winHeadlineSuffix": ".",
+      "loseHeadline": "Ya estás en un buen plan.",
+      "youPaid": "Pagaste",
+      "youdHavePaid": "Habrías pagado",
+      "currentTariff": "Tarifa actual",
+      "annualSavings": "Ahorro anualizado (est.)",
+      "annualSuffix": "/ año · {pct}% más barato",
+      "switchCta": "Cambiar y ahorrar",
+      "allAlternatives": "Todas las alternativas comprobadas",
+      "table": {
+        "tariff": "Tarifa",
+        "type": "Tipo",
+        "energy": "Energía",
+        "fixed": "Fijo",
+        "taxes": "Impuestos + IVA",
+        "total": "Total",
+        "diff": "Δ vs. tú"
+      },
+      "footnote": "La comparación incluye energía + término fijo de potencia + impuestos ibéricos (IE/CSA + IVA). Las facturas reales pueden diferir ~5% de estas proyecciones por discriminación horaria, bono social y tasas específicas del comercializador.",
+      "lowConfidence": "La confianza de la extracción fue {percent}% — verifica los números de arriba contra tu factura real.",
+      "storedAt": "Factura guardada en privado en"
+    },
+    "errors": {
+      "invalidPath": "Ruta de subida no válida.",
+      "signInRequired": "Inicia sesión para subir una factura.",
+      "wrongFolder": "Solo puedes subir a tu propia carpeta.",
+      "storageCheckFailed": "La comprobación de almacenamiento falló: {error}",
+      "uploadNotFound": "Subida no encontrada en almacenamiento. Inténtalo de nuevo.",
+      "couldNotCreate": "No se pudo crear la factura: {error}"
+    }
+  },
+  "alerts": {
+    "kicker": "El Guardián",
+    "title": "Recibe un aviso antes de que la energía sea gratis.",
+    "subtitle": "Vigilamos las próximas 24h cada hora y te avisamos cuando el mercado está a punto de caer o dispararse. Elige lo que importa; silencia el resto.",
+    "push": {
+      "cardTitle": "Notificaciones del navegador",
+      "cardDescription": "Gratis, instantáneo, sin factura de SMS. Funciona en móviles cuando añades Voltwise a tu pantalla de inicio.",
+      "unsupported": "Tu navegador no soporta Web Push. Añade Voltwise a tu pantalla de inicio en iOS 16.4+ o usa un navegador Chromium / Firefox / Safari 16.4+ de escritorio.",
+      "deniedTitle": "Notificaciones bloqueadas",
+      "deniedBody": "Rechazaste el permiso antes. Vuelve a activarlo en los ajustes de sitio de tu navegador y recarga la página.",
+      "onTitle": "Notificaciones activadas",
+      "onBody": "Te avisaremos en este dispositivo cuando una alerta coincida.",
+      "offTitle": "Notificaciones desactivadas",
+      "offBody": "Actívalas para empezar a recibir alertas del Guardián.",
+      "enable": "Activar",
+      "disable": "Desactivar",
+      "errors": {
+        "vapidMissing": "Falta la clave VAPID pública — define NEXT_PUBLIC_VAPID_PUBLIC_KEY.",
+        "permissionDenied": "No se concedió el permiso de notificaciones.",
+        "subscribeFailed": "Suscripción fallida (HTTP {status}).",
+        "enableFailed": "No se pudieron activar las notificaciones.",
+        "disableFailed": "No se pudieron desactivar las notificaciones."
+      }
+    },
+    "create": {
+      "title": "Nueva alerta",
+      "description": "País: {country} · el evaluador corre cada hora a :15 hora de Madrid.",
+      "labels": {
+        "type": "Tipo",
+        "thresholdPrefix": "Umbral (",
+        "thresholdSuffix": ")",
+        "thresholdHint": "≈ {value}¢/kWh",
+        "channels": "Canales",
+        "quietStart": "Inicio de horas silenciosas",
+        "quietEnd": "Fin de horas silenciosas",
+        "localTime": "hora local"
+      },
+      "channels": {
+        "push": "Push (navegador)",
+        "whatsapp": "WhatsApp",
+        "whatsappHint": "(requiere número +351 / +34 en el perfil · stub por ahora)"
+      },
+      "errors": {
+        "pickChannel": "Elige al menos un canal.",
+        "thresholdRange": "El umbral debe ser un número entre -200 y 1000 €/MWh."
+      },
+      "submitIdle": "Crear alerta",
+      "submitSaving": "Guardando…",
+      "types": {
+        "free_energy": {
+          "label": "Energía gratis",
+          "description": "Avísame cuando el precio mayorista caiga por debajo de 1 €/MWh."
+        },
+        "negative": {
+          "label": "Precio negativo",
+          "description": "Avísame cuando la red te pague por consumir."
+        },
+        "cheap_hour": {
+          "label": "Hora barata",
+          "description": "Avísame cuando una hora próxima caiga por debajo de mi umbral."
+        },
+        "spike": {
+          "label": "Pico de precio",
+          "description": "Avísame antes de que una hora próxima supere mi umbral."
+        }
+      }
+    },
+    "list": {
+      "title": "Tus alertas",
+      "empty": "Aún sin alertas. Crea una arriba.",
+      "paused": "Pausada",
+      "thresholdLabel": "Umbral:",
+      "channelsLabel": "Canales:",
+      "quietPrefix": "Silencio",
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "confirmDelete": "¿Borrar esta alerta?",
+      "types": {
+        "free_energy": "Energía gratis",
+        "negative": "Precio negativo",
+        "cheap_hour": "Hora barata",
+        "spike": "Pico de precio"
+      }
+    },
+    "events": {
+      "title": "Disparos recientes",
+      "fallback": "Alerta"
+    },
+    "errors": {
+      "signInCreate": "Inicia sesión para crear alertas.",
+      "signInUpdate": "Inicia sesión para actualizar alertas.",
+      "signInDelete": "Inicia sesión para borrar alertas.",
+      "couldNotCreate": "No se pudo crear la alerta.",
+      "couldNotUpdate": "No se pudo actualizar la alerta.",
+      "couldNotDelete": "No se pudo borrar la alerta."
+    }
+  }
+}
