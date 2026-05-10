@@ -68,7 +68,7 @@ export const ingestOmieManual = inngest.createFunction(
   async ({ event, step }) => {
     const date = event.data.date
       ? new Date(`${event.data.date}T00:00:00Z`)
-      : addDays(new Date(), 1)
+      : new Date()
 
     const text = await step.run('fetch', () => fetchOmieFile(date))
     const inserted = await step.run('parse-upsert', async () => {
