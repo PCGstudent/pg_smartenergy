@@ -4,7 +4,7 @@
 
 import { defaultCache } from '@serwist/next/worker'
 import type { PrecacheEntry, SerwistGlobalConfig } from 'serwist'
-import { CacheFirst, ExpirationPlugin, NetworkFirst, Serwist, StaleWhileRevalidate } from 'serwist'
+import { CacheFirst, ExpirationPlugin, NetworkFirst, NetworkOnly, Serwist, StaleWhileRevalidate } from 'serwist'
 
 /**
  * Voltwise service worker (Serwist 9, Workbox-style).
@@ -91,6 +91,17 @@ const serwist = new Serwist({
           }),
         ],
       }),
+    },
+    /**
+     * AUTH routes (/signin, /auth/*) — ALWAYS the network, never cache. Auth pages
+     * embed build-specific Server Action IDs and PKCE flow state; serving a stale
+     * cached copy across a deploy caused "Server Action not found" + sign-in loops.
+     * Must come BEFORE the generic navigation rule (first matcher wins).
+     */
+    {
+      matcher: ({ url, request }: { url: URL; request: Request }) =>
+        request.mode === 'navigate' && /^\/(signin|auth)(\/|$)/.test(url.pathname),
+      handler: new NetworkOnly(),
     },
     /**
      * HTML navigations — try the network first (real-time price data), fall
