@@ -156,6 +156,30 @@ export function MobileNav({ isSignedIn, email }: MobileNavProps) {
                 })}
               </nav>
 
+              {/* Language — ALWAYS visible, signed in or not. */}
+              <div className="my-1 h-px bg-border/60" />
+              <p className="flex items-center gap-2 px-3 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <Languages className="h-3 w-3" />
+                {tUserMenu('language')}
+              </p>
+              {locales.map((loc) => {
+                const active = loc === activeLocale
+                return (
+                  <button
+                    key={loc}
+                    type="button"
+                    onClick={() => onPickLocale(loc)}
+                    disabled={isPending}
+                    aria-current={active ? 'true' : undefined}
+                    className="flex min-h-[44px] items-center gap-3 rounded-lg px-3 text-[15px] text-muted-foreground transition hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60"
+                  >
+                    <span className="text-base leading-none">{localeFlags[loc]}</span>
+                    <span className="flex-1 text-left">{localeNames[loc]}</span>
+                    {active ? <Check className="h-4 w-4 text-primary" /> : null}
+                  </button>
+                )
+              })}
+
               {isSignedIn ? (
                 <>
                   <div className="my-1 h-px bg-border/60" />
@@ -171,30 +195,6 @@ export function MobileNav({ isSignedIn, email }: MobileNavProps) {
                     <Settings2 className="h-4 w-4 shrink-0" />
                     {tCommon('settings')}
                   </Link>
-
-                  {/* Language */}
-                  <div className="my-1 h-px bg-border/60" />
-                  <p className="flex items-center gap-2 px-3 py-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    <Languages className="h-3 w-3" />
-                    {tUserMenu('language')}
-                  </p>
-                  {locales.map((loc) => {
-                    const active = loc === activeLocale
-                    return (
-                      <button
-                        key={loc}
-                        type="button"
-                        onClick={() => onPickLocale(loc)}
-                        disabled={isPending}
-                        aria-current={active ? 'true' : undefined}
-                        className="flex min-h-[44px] items-center gap-3 rounded-lg px-3 text-[15px] text-muted-foreground transition hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60"
-                      >
-                        <span className="text-base leading-none">{localeFlags[loc]}</span>
-                        <span className="flex-1 text-left">{localeNames[loc]}</span>
-                        {active ? <Check className="h-4 w-4 text-primary" /> : null}
-                      </button>
-                    )
-                  })}
 
                   {/* Sign out */}
                   <div className="my-1 h-px bg-border/60" />

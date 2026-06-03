@@ -4,6 +4,7 @@ import { Zap } from 'lucide-react'
 import { getSession } from '@/lib/supabase/auth'
 import { UserMenu } from '@/components/auth/user-menu'
 import { MobileNav } from '@/components/layout/mobile-nav'
+import { LocaleToggle } from '@/components/layout/locale-toggle'
 import { buildNavLinks } from '@/components/layout/nav-links'
 
 /**
@@ -42,8 +43,12 @@ export async function SiteNav() {
               {t(link.labelKey)}
             </Link>
           ))}
+          {/* Language toggle — always visible, signed in or not. */}
+          <div className="ml-2">
+            <LocaleToggle />
+          </div>
           {session?.user ? (
-            <div className="ml-2">
+            <div className="ml-1">
               <UserMenu
                 email={session.user.email ?? '—'}
                 country={session.profile?.country ?? null}
@@ -52,7 +57,7 @@ export async function SiteNav() {
           ) : (
             <Link
               href="/signin"
-              className="ml-2 rounded-md bg-primary px-3 py-1.5 font-medium text-primary-foreground transition hover:opacity-90"
+              className="ml-1 rounded-md bg-primary px-3 py-1.5 font-medium text-primary-foreground transition hover:opacity-90"
             >
               {t('signIn')}
             </Link>
