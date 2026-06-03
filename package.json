@@ -5,6 +5,8 @@
   "description": "Voltwise — the Iberian energy co-pilot. Real-time OMIE prices, AI invoice audits, smart alerts.",
   "scripts": {
     "dev": "next dev",
+    "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\"",
+    "dev:clean": "npm run clean && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
