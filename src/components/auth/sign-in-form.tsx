@@ -2,18 +2,16 @@
 
 import { useState, useTransition } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { Loader2, Mail } from 'lucide-react'
 import { createSupabaseBrowser } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { sendMagicLink } from '@/app/signin/actions'
 
 export function SignInForm() {
   const t = useTranslations('signin')
   const search = useSearchParams()
   const next = search.get('next') ?? '/dashboard'
-  const locale = useLocale()
 
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -33,25 +31,18 @@ export function SignInForm() {
         const callback = new URL('/auth/callback', origin)
         callback.searchParams.set('next', next)
 
-        // Try Resend first. If not configured the action returns { sent: false }
-        // and we fall through to the built-in Supabase mailer.
-        const result = await sendMagicLink({
+        // Use Supabase's built-in mailer via signInWithOtp (client-side). This runs the
+        // PKCE flow end-to-end: the code verifier is stored in THIS browser, so the
+        // /auth/callback exchangeCodeForSession succeeds. (A previous server-side
+        // admin.generateLink path produced a link whose verifier the browser never had,
+        // which bounced the user back to /signin in a loop.) Works for any email without
+        // a verified sending domain.
+        const supabase = createSupabaseBrowser()
+        const { error: err } = await supabase.auth.signInWithOtp({
           email,
-          redirectTo: callback.toString(),
-          locale,
+          options: { emailRedirectTo: callback.toString(), shouldCreateUser: true },
         })
-
-        if ('error' in result) throw new Error(result.error)
-
-        if (!result.sent) {
-          // Resend not configured — use Supabase built-in mailer (rate-limited fallback)
-          const supabase = createSupabaseBrowser()
-          const { error: err } = await supabase.auth.signInWithOtp({
-            email,
-            options: { emailRedirectTo: callback.toString(), shouldCreateUser: true },
-          })
-          if (err) throw err
-        }
+        if (err) throw err
 
         setSuccess(true)
       } catch (err) {
