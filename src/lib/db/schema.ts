@@ -3,12 +3,14 @@ import {
   boolean,
   date,
   index,
+  integer,
   jsonb,
   numeric,
   pgTable,
   primaryKey,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core'
 
@@ -27,6 +29,8 @@ export const profiles = pgTable('profiles', {
   whatsappE164: text('whatsapp_e164'),
   pushSubscription: jsonb('push_subscription'),
   notificationPrefs: jsonb('notification_prefs').default({}),
+  /** kW of contracted power — used for fixed-term calculation; NULL = use DEFAULT_CONTRACTED_KVA (6.9). */
+  contractedKva: numeric('contracted_kva', { precision: 5, scale: 2 }),
   /** Set when the user completes the country picker. Null = first-time, send to /onboarding. */
   onboardedAt: timestamp('onboarded_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -180,6 +184,70 @@ export const alertEvents = pgTable('alert_events', {
 })
 
 /**
+ * user_appliances — a user's controllable/shiftable loads.
+ *
+ * Drives the "Hoje & Amanhã" planner: each active appliance is mapped to its
+ * cheapest FINAL-price charging window for tomorrow. `energy_kwh` + `power_kw`
+ * feed the window optimizer (slots = ceil(energy/power)); `typical_duration_min`
+ * is informational UX only. `earliest_hour`/`latest_hour` are LOCAL-hour
+ * availability constraints (Europe/Lisbon for PT). RLS: owner-only.
+ */
+export const userAppliances = pgTable(
+  'user_appliances',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id').notNull(),
+    label: text('label').notNull(),
+    // 'ev' | 'washer' | 'dishwasher' | 'water_heater' | 'home_battery' | 'dryer' | 'pool_pump' | 'other'
+    type: text('type').notNull().default('other'),
+    energyKwh: numeric('energy_kwh', { precision: 8, scale: 3 }).notNull(),
+    powerKw: numeric('power_kw', { precision: 6, scale: 3 }).notNull(),
+    typicalDurationMin: integer('typical_duration_min'),
+    interruptible: boolean('interruptible').notNull().default(false),
+    /** Earliest allowed local start hour (0–24, inclusive). 0 = no constraint. */
+    earliestHour: integer('earliest_hour').notNull().default(0),
+    /** Latest local hour by which it must finish (0–24, exclusive). 24 = no constraint. */
+    latestHour: integer('latest_hour').notNull().default(24),
+    active: boolean('active').notNull().default(true),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    userIdx: index('idx_user_appliances_user').on(t.userId, t.active),
+  }),
+)
+
+/**
+ * savings_ledger — per-(user, day) realized € saving (the "já poupaste X€" figure).
+ *
+ * One row per user per local day, carrying the EUROS that day's smart-charging plan
+ * saved vs charging at a typical hour, summed across the user's active loads (FINAL
+ * price, euros only). Written idempotently by the daily-anchor runner; read back as a
+ * cumulative month/year total on /plan and /dashboard. RLS: owner-only read.
+ */
+export const savingsLedger = pgTable(
+  'savings_ledger',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id').notNull(),
+    /** The LOCAL day this saving is for (the planned day). */
+    date: date('date').notNull(),
+    /** € saved that day by timing loads vs a typical hour. Always >= 0. FINAL price. */
+    estimatedSavingEur: numeric('estimated_saving_eur', { precision: 10, scale: 2 })
+      .notNull()
+      .default('0'),
+    /** Per-appliance breakdown: [{ appliance_id, label, saving_eur }]. */
+    breakdown: jsonb('breakdown').notNull().default([]),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    userDateUnique: uniqueIndex('savings_ledger_user_date_unique').on(t.userId, t.date),
+    userDateIdx: index('idx_savings_ledger_user_date').on(t.userId, t.date),
+  }),
+)
+
+/**
  * devices — IoT integrations (Phase 2).
  */
 export const devices = pgTable('devices', {
@@ -200,3 +268,7 @@ export type Invoice = typeof invoices.$inferSelect
 export type Audit = typeof audits.$inferSelect
 export type Alert = typeof alerts.$inferSelect
 export type ConsumptionReading = typeof consumptionReadings.$inferSelect
+export type UserAppliance = typeof userAppliances.$inferSelect
+export type UserApplianceInsert = typeof userAppliances.$inferInsert
+export type SavingsLedgerRow = typeof savingsLedger.$inferSelect
+export type SavingsLedgerInsert = typeof savingsLedger.$inferInsert

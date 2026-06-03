@@ -37,7 +37,13 @@ export interface AlertMatch {
   alertId: string
   ts: Date
   priceEurMwh: number
-  /** Short human description, used as notification body. */
+  /**
+   * Short INTERNAL descriptor for logs / debugging only — never surfaced to users.
+   * It carries NO price figure (the evaluator has no tariff context, so any ¢/kWh here
+   * would be a raw-wholesale number that under-states the real bill — product rule #2).
+   * The dispatcher builds the user-facing title/body from localized copy on the FINAL
+   * price, with the hour label rendered in the user's own timezone.
+   */
   reason: string
   /** Sort key — earlier `ts` first; ties broken by extremeness. */
 }
@@ -70,7 +76,7 @@ export function evaluateAlert(
           alertId: alert.id,
           ts: p.ts,
           priceEurMwh: p.priceEurMwh,
-          reason: `Energy will be FREE at ${fmt(p.ts)} (${centsKwh(p.priceEurMwh)})`,
+          reason: `free_energy@${fmt(p.ts)}`,
         }))
 
     case 'negative':
@@ -80,7 +86,7 @@ export function evaluateAlert(
           alertId: alert.id,
           ts: p.ts,
           priceEurMwh: p.priceEurMwh,
-          reason: `NEGATIVE price at ${fmt(p.ts)} — the grid will pay you to consume`,
+          reason: `NEGATIVE@${fmt(p.ts)}`,
         }))
 
     case 'cheap_hour': {
@@ -91,7 +97,7 @@ export function evaluateAlert(
           alertId: alert.id,
           ts: p.ts,
           priceEurMwh: p.priceEurMwh,
-          reason: `Cheap hour at ${fmt(p.ts)} — ${centsKwh(p.priceEurMwh)}`,
+          reason: `cheap_hour@${fmt(p.ts)}`,
         }))
     }
 
@@ -103,7 +109,7 @@ export function evaluateAlert(
           alertId: alert.id,
           ts: p.ts,
           priceEurMwh: p.priceEurMwh,
-          reason: `Price SPIKE at ${fmt(p.ts)} — ${centsKwh(p.priceEurMwh)}. Avoid heavy use.`,
+          reason: `spike@${fmt(p.ts)}`,
         }))
     }
   }
@@ -160,14 +166,15 @@ export function pickPrimaryMatch(matches: AlertMatch[]): AlertMatch | null {
   return [...matches].sort((a, b) => a.ts.getTime() - b.ts.getTime())[0]!
 }
 
+/**
+ * Hour:minute label for the INTERNAL `reason` descriptor only. The fixed Lisbon zone is
+ * fine here because this string is for logs/debugging, never user-facing; the dispatcher
+ * formats the user-visible hour in the user's own timezone (Europe/Lisbon | Europe/Madrid).
+ */
 function fmt(ts: Date): string {
   return ts.toLocaleTimeString('pt-PT', {
     hour: '2-digit',
     minute: '2-digit',
     timeZone: 'Europe/Lisbon',
   })
-}
-
-function centsKwh(eurMwh: number): string {
-  return `${(eurMwh / 10).toFixed(2)}¢/kWh`
 }

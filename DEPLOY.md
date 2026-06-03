@@ -162,13 +162,20 @@ git push
 
 1. In the Inngest dashboard → Apps → Sync new app.
 2. Endpoint: `https://YOUR-PROD-DOMAIN/api/inngest`
-3. Sync. The 5 functions auto-discover:
+3. Sync. The functions auto-discover:
    - `ingestOmieDaily` (cron 14:30 Europe/Madrid)
    - `ingestOmieManual` (event-driven)
    - `processInvoice` (event: `voltwise/invoice.uploaded`)
-   - `evaluateAlerts` (cron `:15` of every hour Europe/Madrid)
+   - `evaluateAlerts` (cron `:15` of every hour Europe/Madrid — the hourly Smart Guard)
    - `evaluateAlertsManual` (event-driven)
+   - `sendDailyAnchor` (cron 15:00 Europe/Madrid — the daily anchor: runs after the 14:30
+     ingest so tomorrow's full FINAL curve is loaded, then sends each active-alert user their
+     charging-window / free-energy / price-spike message for tomorrow, in their locale, euros)
+   - `sendDailyAnchorManual` (event: `voltwise/alerts.daily` — replay/backfill)
 4. Trigger `ingestOmieManual` once from the Inngest UI to backfill **today's** prices so `/dashboard` isn't empty.
+5. (Optional) Trigger `sendDailyAnchorManual` to dry-run the daily anchor; with `WHATSAPP_*`
+   / VAPID keys unset both senders log a stub line instead of delivering, so you can inspect
+   the decisions safely. Locally: `pnpm anchor:daily`.
 
 ---
 

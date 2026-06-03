@@ -19,6 +19,8 @@ const serverSchema = z.object({
   VAPID_SUBJECT: z.string().default('mailto:hello@voltwise.app'),
   WHATSAPP_PHONE_NUMBER_ID: z.string().optional(),
   WHATSAPP_ACCESS_TOKEN: z.string().optional(),
+  RESEND_API_KEY: z.string().optional(),
+  RESEND_FROM_EMAIL: z.string().default('Voltwise <no-reply@voltwise.app>'),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 })
 
@@ -53,6 +55,8 @@ export const serverEnv = parse(serverSchema, {
   VAPID_SUBJECT: process.env.VAPID_SUBJECT,
   WHATSAPP_PHONE_NUMBER_ID: process.env.WHATSAPP_PHONE_NUMBER_ID,
   WHATSAPP_ACCESS_TOKEN: process.env.WHATSAPP_ACCESS_TOKEN,
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
+  RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL,
   NODE_ENV: process.env.NODE_ENV,
 })
 

@@ -13,7 +13,7 @@ import {
 const ALERT_TYPES = ['cheap_hour', 'free_energy', 'spike', 'negative'] as const
 
 const channelsSchema = z
-  .array(z.enum(['push', 'whatsapp']))
+  .array(z.enum(['push', 'whatsapp', 'email']))
   .min(1, 'Pick at least one delivery channel.')
 
 const scheduleSchema = z

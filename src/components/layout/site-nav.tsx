@@ -3,14 +3,23 @@ import { getTranslations } from 'next-intl/server'
 import { Zap } from 'lucide-react'
 import { getSession } from '@/lib/supabase/auth'
 import { UserMenu } from '@/components/auth/user-menu'
+import { MobileNav } from '@/components/layout/mobile-nav'
+import { buildNavLinks } from '@/components/layout/nav-links'
 
 /**
  * Server component — reads the Supabase session per request.
  * Calling cookies() (via getSession) automatically opts the layout out
  * of static rendering, so the menu always reflects the current user.
+ *
+ * Two nav surfaces share one link model (`buildNavLinks`):
+ * - `md` and up: the inline horizontal nav below.
+ * - below `md`: the collapsed `<MobileNav>` drawer, which also mirrors the
+ *   account actions from `<UserMenu>`.
  */
 export async function SiteNav() {
   const [session, t] = await Promise.all([safeSession(), getTranslations('nav')])
+  const isSignedIn = Boolean(session?.user)
+  const links = buildNavLinks(isSignedIn)
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/50 bg-background/60 backdrop-blur-xl">
@@ -21,34 +30,25 @@ export async function SiteNav() {
           </span>
           <span className="text-base">Voltwise</span>
         </Link>
-        <nav className="flex items-center gap-1 text-sm">
-          <Link
-            href="/dashboard"
-            className="rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-          >
-            {t('dashboard')}
-          </Link>
+
+        {/* Desktop: full inline nav (md and up). */}
+        <nav className="hidden items-center gap-1 text-sm md:flex">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+            >
+              {t(link.labelKey)}
+            </Link>
+          ))}
           {session?.user ? (
-            <>
-              <Link
-                href="/auditor"
-                className="rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-              >
-                {t('auditor')}
-              </Link>
-              <Link
-                href="/alerts"
-                className="rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-              >
-                {t('alerts')}
-              </Link>
-              <div className="ml-2">
-                <UserMenu
-                  email={session.user.email ?? '—'}
-                  country={session.profile?.country ?? null}
-                />
-              </div>
-            </>
+            <div className="ml-2">
+              <UserMenu
+                email={session.user.email ?? '—'}
+                country={session.profile?.country ?? null}
+              />
+            </div>
           ) : (
             <Link
               href="/signin"
@@ -58,6 +58,9 @@ export async function SiteNav() {
             </Link>
           )}
         </nav>
+
+        {/* Mobile: collapsed hamburger drawer (below md). */}
+        <MobileNav isSignedIn={isSignedIn} email={session?.user.email ?? null} />
       </div>
     </header>
   )

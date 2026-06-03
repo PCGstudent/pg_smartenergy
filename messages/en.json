@@ -1,0 +1,682 @@
+{
+  "common": {
+    "appName": "Voltwise",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "signedIn": "Signed in",
+    "dashboard": "Dashboard",
+    "auditor": "Auditor",
+    "alerts": "Alerts",
+    "settings": "Settings",
+    "language": "Language",
+    "country": {
+      "PT": "Portugal",
+      "ES": "Spain"
+    },
+    "actions": {
+      "tryAgain": "Try again",
+      "back": "Back",
+      "save": "Save",
+      "cancel": "Cancel",
+      "notNow": "Not now"
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "plan": "Plan",
+    "auditor": "Auditor",
+    "alerts": "Alerts",
+    "market": "Market",
+    "signIn": "Sign in",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "market": {
+    "kicker": "MIBEL — Iberian Market",
+    "title": "Market Prices",
+    "subtitle": "Hourly OMIE prices for Portugal and Spain. Last 30 days.",
+    "zonePT": "Portugal",
+    "zoneES": "Spain",
+    "stats": {
+      "avg": "Average",
+      "min": "Minimum",
+      "max": "Maximum",
+      "cheapHours": "Cheap hours",
+      "cheapHoursHint": "% of hours below 50 €/MWh in the last 30 days",
+      "negativeHours": "Negative hours",
+      "negativeHoursHint": "% of hours with negative price (the grid pays you to consume)",
+      "negativeCallout": "{pct}% of hours in the last 30 days had a negative price.",
+      "unit": "€/MWh"
+    },
+    "charts": {
+      "dailyTitle": "Daily average price (90 days)",
+      "hourlyTitle": "Average hourly profile (30 days)",
+      "hourlyHint": "Local time Madrid/Lisbon — ideal for knowing when to run appliances",
+      "price": "Price (€/MWh)",
+      "hour": "Hour",
+      "day": "Day"
+    },
+    "noData": "No data available for this period.",
+    "finalPriceNote": "These are wholesale market prices (€/MWh). The advice you get on the Dashboard and Plan uses your final price, in €/kWh."
+  },
+  "landing": {
+    "badge": "Iberian energy, decoded",
+    "headline": {
+      "before": "Stop being held hostage by your",
+      "highlight": "electricity bill",
+      "after": "."
+    },
+    "subheadline": "Voltwise reads OMIE in real time, audits your bill with AI, and tells you exactly when to run the dishwasher — in euros, not megawatt-hours.",
+    "ctas": {
+      "livePrices": "See live prices",
+      "auditBill": "Audit my bill"
+    },
+    "tagline": "Built for Portugal and Spain · OMIE, REE & E-Redes",
+    "features": {
+      "oracle": {
+        "title": "The Oracle",
+        "body": "Hour-by-hour OMIE prices for PT and ES, with Golden Hours and Red Hours highlighted automatically."
+      },
+      "auditor": {
+        "title": "The Auditor",
+        "body": "Drop your EDP / Endesa PDF here. We extract every kWh and prove how much you could save."
+      },
+      "smartGuard": {
+        "title": "Guardian",
+        "body": "Push and WhatsApp notifications when energy is nearly free — or about to spike."
+      },
+      "autoPilot": {
+        "title": "Auto-Pilot",
+        "body": "Connect a Shelly or Tuya plug and let Voltwise schedule your appliances automatically."
+      }
+    },
+    "howItWorks": {
+      "kicker": "Three minutes from skeptic to saver",
+      "heading": "The energy market isn't broken. It's just hidden.",
+      "steps": {
+        "market": {
+          "title": "See the day-ahead market",
+          "body": "We pull MIBEL prices for Portugal and Spain hour by hour. The Oracle shows you the cheapest and most expensive windows — in cents per kWh, not jargon."
+        },
+        "audit": {
+          "title": "Audit your last bill",
+          "body": "Drag in your EDP, Endesa, Iberdrola or Galp PDF. Our AI reads it, matches your consumption against an indexed tariff, and tells you — to the euro — what you would have paid instead."
+        },
+        "save": {
+          "title": "Save automatically",
+          "body": "Get push or WhatsApp alerts before energy goes free. Connect a smart plug and Voltwise schedules your dishwasher, EV charger, and water heater on golden hours."
+        }
+      }
+    },
+    "closer": {
+      "headline": "One PDF. Two minutes. Real money back.",
+      "body": "Most Iberian households are on a fixed tariff that costs around 30% more than indexed. Find out — free, no card, no sales calls.",
+      "ctas": {
+        "audit": "Run my free audit",
+        "prices": "See today's prices first"
+      }
+    }
+  },
+  "dashboard": {
+    "kicker": "MIBEL live · {country}",
+    "title": "Today's energy forecast",
+    "volatility": {
+      "title": "Volatility",
+      "spreadSuffix": "¢/kWh spread",
+      "spreadDetail": "From the cheapest hour ({low}) to the peak ({peak}).",
+      "lowest": "Lowest",
+      "peak": "Peak"
+    },
+    "priceNow": {
+      "title": "Right now",
+      "noPrice": "No live price yet.",
+      "perKwh": "/kWh"
+    },
+    "tones": {
+      "free": {
+        "label": "Free energy",
+        "advice": "Run everything you can. The grid is paying you to consume."
+      },
+      "golden": {
+        "label": "Golden hour",
+        "advice": "Cheapest window of the day. Start the dishwasher and EV charge now."
+      },
+      "cheap": {
+        "label": "Cheap",
+        "advice": "Comfortable price. Use freely."
+      },
+      "spike": {
+        "label": "Price spike",
+        "advice": "Avoid heavy appliances. Wait for the next golden hour."
+      },
+      "expensive": {
+        "label": "Expensive",
+        "advice": "Higher than average. Defer non-urgent loads."
+      },
+      "normal": {
+        "label": "Normal",
+        "advice": "Average pricing. Nothing to optimize right now."
+      }
+    },
+    "golden": {
+      "title": "Plan your day",
+      "subtitle": "Use the green windows. Skip the red ones.",
+      "goldenTitle": "Golden hours",
+      "goldenEmpty": "No standout cheap windows in the next 30h.",
+      "avoidTitle": "Avoid these hours",
+      "spikesEmpty": "No spikes ahead.",
+      "today": "today",
+      "free": "FREE"
+    },
+    "solar": {
+      "summary": "Why is midday cheaper?",
+      "body": "At midday so much solar floods the Iberian grid that prices fall — sometimes below zero. That's why the cheapest hour is daytime, not overnight. After sunset solar drops and prices spike."
+    },
+    "chart": {
+      "title": "Next 36 hours",
+      "subtitle": "Hourly wholesale price · Madrid time"
+    },
+    "auditCard": {
+      "kicker": "Your latest audit",
+      "saving": "You could save",
+      "perPeriod": "over the billing period",
+      "switchTo": "Switch to",
+      "currentProvider": "Current provider",
+      "viewAudit": "View full audit",
+      "noSavings": "You're on a good tariff! Maximum possible saving is under €1.",
+      "period": "Period"
+    },
+    "footnote": "Data from the OMIE day-ahead market. Tariff comparisons exclude the fixed power term and taxes unless an invoice has been audited.",
+    "action": {
+      "title": "Next best action",
+      "empty": "Nothing standing out — prices look flat ahead.",
+      "at": "at",
+      "zone": "Lisbon",
+      "free": {
+        "headline": "Energy will be FREE soon",
+        "headlineNegative": "Energy will be NEGATIVE soon",
+        "detailFinal": "Your all-in price drops to {cents}. Run your washer, dryer, and EV charge.",
+        "detailWholesale": "The wholesale price drops to {cents}. A great window to shift heavy use into."
+      },
+      "cheap": {
+        "headline": "Cheapest hour: {time}",
+        "detailFinal": "At {cents} you'll pay {pct}% less than right now. Good time to run heavy appliances.",
+        "detailWholesale": "Wholesale hits {cents}, {pct}% below now. Your final price depends on your tariff."
+      },
+      "avoid": {
+        "headline": "Avoid heavy use at {time}",
+        "detail": "Price jumps to {cents}. Wait until {altTime} ({altCents})."
+      }
+    },
+    "empty": {
+      "badge": "No prices imported yet",
+      "titlePT": "Import today's OMIE feed to see Portugal live",
+      "titleES": "Import today's OMIE feed to see Spain live",
+      "description": "Voltwise pulls the OMIE daily auction every day at 14:30 (Madrid time). To backfill historical data or run the first sync now, call the manual endpoint.",
+      "ctaSource": "OMIE source",
+      "ctaHome": "Back to home"
+    }
+  },
+  "userMenu": {
+    "trigger": "Account",
+    "language": "Language",
+    "languageSet": "Language updated to {language}"
+  },
+  "offline": {
+    "title": "The lights are on, but the line is down.",
+    "body": "Voltwise can't reach the network right now. Your last cached prices and audits are still available. Pull a fresh forecast as soon as you're back online.",
+    "ctas": {
+      "tryAgain": "Try again",
+      "viewAudits": "View cached audits"
+    },
+    "tip": "Tip: Voltwise reloads automatically when the connection returns."
+  },
+  "install": {
+    "android": {
+      "title": "Install Voltwise",
+      "body": "One tap. Home screen tile, push notifications, faster launch.",
+      "cta": "Install"
+    },
+    "ios": {
+      "title": "Add Voltwise to your home screen",
+      "before": "Tap",
+      "share": "Share",
+      "and": ", then",
+      "addToHome": "Add to Home Screen",
+      "after": ". iOS only sends push alerts to installed PWAs."
+    }
+  },
+  "auditor": {
+    "kicker": "The Auditor",
+    "title": "Drop a bill. See what you save.",
+    "subtitle": "Upload your latest EDP / Endesa / Iberdrola / Galp PDF. Gemini reads every line, we replay your consumption against actual OMIE prices, and tell you — to the euro — how much you'd have paid on a smarter tariff.",
+    "newAudit": {
+      "title": "New audit",
+      "description": "PDF only · max 10 MB · we never share your bill · processed in ~30 seconds."
+    },
+    "pastAudits": "Past audits",
+    "noAudits": "No audits yet. Upload your first bill above.",
+    "pendingExtraction": "Extraction pending",
+    "status": {
+      "done": "Done",
+      "failed": "Failed",
+      "processing": "Processing…"
+    },
+    "upload": {
+      "dropHere": "Drag your bill PDF here",
+      "orClick": "or click to browse",
+      "buttonIdle": "Audit this bill",
+      "buttonUploading": "Uploading…",
+      "buttonFinalizing": "Starting audit…",
+      "privacy": "We store your PDF privately in your folder. The AI never reads it twice — extraction happens once and we only keep the structured fields.",
+      "errors": {
+        "pdfOnly": "PDF files only.",
+        "tooLarge": "Maximum 10 MB.",
+        "pickFirst": "Please pick a PDF first.",
+        "uploadFailed": "Upload failed."
+      }
+    },
+    "processing": {
+      "title": "Auditing your bill",
+      "subtitle": "Usually takes 20–40 seconds. We'll update automatically when it's ready.",
+      "steps": {
+        "1": "Reading the PDF with Gemini",
+        "2": "Loading OMIE prices for the period",
+        "3": "Replaying your consumption hour by hour",
+        "4": "Running tariff comparisons"
+      },
+      "invoiceId": "Invoice ID:"
+    },
+    "failed": {
+      "title": "Audit failed",
+      "unknownError": "Unknown error.",
+      "tip": "Try a sharper scan or a different bill. The PDF is still saved in your folder."
+    },
+    "incomplete": {
+      "title": "Incomplete audit",
+      "body": "The bill was extracted but no comparison was generated. Please try uploading again."
+    },
+    "result": {
+      "back": "← All audits",
+      "syntheticBadge": "synthetic profile",
+      "realDataBadge": "real hourly data",
+      "winHeadlinePrefix": "You overpaid by ",
+      "winHeadlineSuffix": ".",
+      "loseHeadline": "You're already on a good plan.",
+      "youPaid": "You paid",
+      "youdHavePaid": "You'd have paid",
+      "currentTariff": "Current tariff",
+      "annualSavings": "Annualised savings (est.)",
+      "annualSuffix": "/ year · {pct}% cheaper",
+      "annualSuffixIndexed": "/ year (if OMIE stays at period prices) · {pct}% this period",
+      "eredesBadge": "real grid data",
+      "switchCta": "Switch and save",
+      "allAlternatives": "All alternatives checked",
+      "table": {
+        "tariff": "Tariff",
+        "type": "Type",
+        "energy": "Energy",
+        "fixed": "Fixed",
+        "taxes": "Taxes + VAT",
+        "total": "Total",
+        "diff": "Δ vs. you"
+      },
+      "footnote": "Comparison includes energy + fixed power term + Iberian taxes (IE/CSA + VAT). Real bills may differ ~5% from these projections due to time-of-use rates, social bonus, and provider-specific fees.",
+      "lowConfidence": "Extraction confidence was {percent}% — please verify the figures above against your real bill.",
+      "storedAt": "Bill stored privately at"
+    },
+    "eredes": {
+      "title": "Improve with real consumption data",
+      "description": "Download your hourly consumption CSV from",
+      "chooseFile": "Choose CSV…",
+      "import": "Import and recalculate",
+      "importing": "Importing…",
+      "success": "Real consumption imported! Reloading results…",
+      "hint": "E-Redes portal → Consumption Data → Select period → Export CSV (granularity: Hour).",
+      "errors": {
+        "csvOnly": "CSV files only.",
+        "pickFirst": "Please choose a CSV file first."
+      }
+    },
+    "reaudit": {
+      "label": "Recalculate with current tariffs",
+      "running": "Recalculating…"
+    },
+    "errors": {
+      "invalidPath": "Invalid upload path.",
+      "signInRequired": "Please sign in to upload a bill.",
+      "wrongFolder": "You can only upload to your own folder.",
+      "storageCheckFailed": "Storage check failed: {error}",
+      "uploadNotFound": "Upload not found in storage. Please try again.",
+      "couldNotCreate": "Could not create the invoice: {error}"
+    }
+  },
+  "alerts": {
+    "kicker": "The Guardian",
+    "title": "Get notified before energy goes free.",
+    "subtitle": "We watch the next 24 hours every hour and alert you when the market is about to drop or spike. Choose what matters; mute what doesn't.",
+    "push": {
+      "cardTitle": "Browser notifications",
+      "cardDescription": "Free, instant, no SMS bill. Works on mobile once you add Voltwise to your home screen.",
+      "unsupported": "Your browser doesn't support Web Push. Add Voltwise to your home screen on iOS 16.4+ or use a Chromium / Firefox / Safari 16.4+ browser on desktop.",
+      "deniedTitle": "Notifications blocked",
+      "deniedBody": "You previously denied permission. Re-enable it in your browser's site settings and reload the page.",
+      "onTitle": "Notifications are on",
+      "onBody": "We'll alert you on this device when an alert matches.",
+      "offTitle": "Notifications are off",
+      "offBody": "Turn on to start receiving Guardian alerts.",
+      "enable": "Enable",
+      "disable": "Disable",
+      "errors": {
+        "vapidMissing": "Missing public VAPID key — set NEXT_PUBLIC_VAPID_PUBLIC_KEY.",
+        "permissionDenied": "Notification permission was not granted.",
+        "subscribeFailed": "Subscription failed (HTTP {status}).",
+        "enableFailed": "Could not enable notifications.",
+        "disableFailed": "Could not disable notifications."
+      }
+    },
+    "create": {
+      "title": "New alert",
+      "description": "Country: {country} · We check prices every hour, at :15 past (Madrid time).",
+      "labels": {
+        "type": "Type",
+        "thresholdPrefix": "Threshold (",
+        "thresholdSuffix": ")",
+        "thresholdHint": "wholesale price in ¢/kWh — your final price is higher",
+        "channels": "Channels",
+        "quietStart": "Quiet hours start",
+        "quietEnd": "Quiet hours end",
+        "localTime": "local time"
+      },
+      "channels": {
+        "push": "Push (browser)",
+        "whatsapp": "WhatsApp",
+        "whatsappHint": "(requires +351 / +34 number in profile · coming soon)",
+        "whatsappNeedsNumber": "(add your number in settings)",
+        "email": "Email",
+        "emailHint": "(the reliable fallback)"
+      },
+      "errors": {
+        "pickChannel": "Pick at least one channel.",
+        "thresholdRange": "Threshold must be a number between -20 and 100 ¢/kWh."
+      },
+      "submitIdle": "Create alert",
+      "submitSaving": "Saving…",
+      "types": {
+        "free_energy": {
+          "label": "Free energy",
+          "description": "Alert me when the wholesale price drops to practically zero."
+        },
+        "negative": {
+          "label": "Negative price",
+          "description": "Alert me when the grid pays you to consume."
+        },
+        "cheap_hour": {
+          "label": "Cheap hour",
+          "description": "Alert me when an upcoming hour drops below my threshold."
+        },
+        "spike": {
+          "label": "Price spike",
+          "description": "Alert me before an upcoming hour exceeds my threshold."
+        }
+      }
+    },
+    "list": {
+      "title": "Your alerts",
+      "empty": "No alerts yet. Create one above.",
+      "paused": "Paused",
+      "thresholdLabel": "Threshold:",
+      "channelsLabel": "Channels:",
+      "quietPrefix": "Quiet",
+      "pause": "Pause",
+      "resume": "Resume",
+      "confirmDelete": "Delete this alert?",
+      "types": {
+        "free_energy": "Free energy",
+        "negative": "Negative price",
+        "cheap_hour": "Cheap hour",
+        "spike": "Price spike"
+      }
+    },
+    "events": {
+      "title": "Recent triggers",
+      "fallback": "Alert"
+    },
+    "healthCheck": {
+      "title": "Your alerts have nowhere to go",
+      "body": "You have active alerts but no channel set up, so nothing actually reaches you. Turn on a channel to start receiving your alerts.",
+      "cta": "Set up a channel"
+    },
+    "errors": {
+      "signInCreate": "Sign in to create alerts.",
+      "signInUpdate": "Sign in to update alerts.",
+      "signInDelete": "Sign in to delete alerts.",
+      "couldNotCreate": "Could not create the alert.",
+      "couldNotUpdate": "Could not update the alert.",
+      "couldNotDelete": "Could not delete the alert."
+    },
+    "daily": {
+      "anchor": {
+        "title": "🔋 Your window for tomorrow",
+        "body": "Run {appliance} between {window} tomorrow — final price ~{price}, about {cost} for the full charge. You save {saved} vs the worst hour."
+      },
+      "free": {
+        "title": "⚡ Near-free energy tomorrow",
+        "body": "Tomorrow between {window} energy drops to ~{price}. Great time to run a wash, charge the car or heat water."
+      },
+      "negative": {
+        "title": "💸 Negative price tomorrow",
+        "body": "Tomorrow between {window} the grid will even pay you to consume. The best moment to use everything you can."
+      },
+      "spike": {
+        "title": "🔴 Price spike tomorrow",
+        "body": "Tomorrow between {window} energy jumps to ~{price}. Avoid heavy loads in those hours and save."
+      },
+      "emailCta": "See my plan",
+      "emailFootnote": "You're getting this email because you turned on daily alerts in Voltwise."
+    },
+    "hourly": {
+      "cheap_hour": {
+        "title": "🟢 Cheap hour ahead",
+        "body": "At {time} energy gets cheap. A good time to run a wash, charge the car or heat water."
+      },
+      "free_energy": {
+        "title": "⚡ Near-free energy ahead",
+        "body": "At {time} energy is practically free. Make the most of it and run everything you can."
+      },
+      "negative": {
+        "title": "💸 Negative price ahead",
+        "body": "At {time} the grid will even pay you to consume. The best moment to use everything you can."
+      },
+      "spike": {
+        "title": "🔴 Price spike ahead",
+        "body": "At {time} energy jumps. Avoid heavy loads in that hour and save."
+      }
+    }
+  },
+  "plan": {
+    "kicker": "Today & Tomorrow",
+    "title": "Your charging plan",
+    "subtitle": "We take tomorrow's day-ahead prices and your appliances, then tell you the cheapest hour to run each one — in euros on your final price, not wholesale megawatt-hours.",
+    "best": {
+      "kicker": "Best window tomorrow",
+      "body": "Run it {date} starting in this window — your all-in price averages {price}, about {cost} for the full run.",
+      "savingLabel": "You save",
+      "savingHint": "vs the priciest equivalent run",
+      "noAppliancesTitle": "Add an appliance to get a plan",
+      "noAppliancesBody": "Tell us about your EV, washer, or water heater below and we'll find its cheapest window for tomorrow.",
+      "noWindow": "None of your appliances fit their availability window tomorrow. Widen their hours below.",
+      "outsideBody": "Your availability window is too short for this load tomorrow. Here are the {count} cheapest hours of the day instead: your all-in price averages {price}, about {cost} for the full run.",
+      "widenHint": "These hours fall outside your window — widen the hours on the appliances below to use them."
+    },
+    "chart": {
+      "title": "Final price — {date}",
+      "subtitle": "Your all-in €/kWh hour by hour",
+      "range": "{min} to {max}",
+      "finalPrice": "Final price",
+      "recommended": "Recommended window"
+    },
+    "solar": {
+      "summary": "Why is midday cheaper?",
+      "body": "At midday so much solar floods the Iberian grid that prices fall — sometimes below zero. That's why the cheapest hour is daytime, not overnight. After sunset solar drops and prices spike.",
+      "legend": {
+        "negative": "Negative / free",
+        "cheap": "Cheap",
+        "peak": "Peak"
+      }
+    },
+    "perAppliance": {
+      "title": "Every appliance",
+      "window": "{range} · {cost}",
+      "noWindow": "No window fits its hours tomorrow",
+      "saves": "Saves",
+      "splitBadge": "split run",
+      "splitHint": "Cheaper if paused and resumed across separate cheap hours.",
+      "outsideWindow": "Tomorrow's {count} cheapest hours: {range} · ~{price}",
+      "widenHint": "widen the hours below"
+    },
+    "pending": {
+      "title": "Tomorrow's prices aren't out yet",
+      "body": "OMIE publishes the day-ahead auction around 12:45 (Madrid time). Check back this afternoon and we'll plan your full day with certainty.",
+      "marketCta": "See {zone} prices",
+      "tariffTitle": "Pick your tariff first",
+      "tariffBody": "We need to know your plan to turn wholesale prices into your real, all-in price. Set it in settings and your plan appears here.",
+      "tariffCta": "Go to settings"
+    },
+    "appliances": {
+      "title": "Your appliances",
+      "add": "Add appliance",
+      "addTitle": "New appliance",
+      "editTitle": "Edit appliance",
+      "empty": "No appliances yet. Add your EV, washer, dishwasher, or water heater to start planning.",
+      "label": "Name",
+      "labelPlaceholder": "e.g. Dishwasher",
+      "type": "Type",
+      "energyKwh": "Energy per run (kWh)",
+      "powerKw": "Power draw (kW)",
+      "earliestHour": "Earliest hour",
+      "latestHour": "Must finish by",
+      "interruptible": "Can be paused and resumed",
+      "interruptibleHint": "Interruptible loads (EVs, water heaters, batteries) can cherry-pick the cheapest scattered hours. Leave off for a wash or dishwasher that must run in one go.",
+      "interruptibleBadge": "interruptible",
+      "paused": "Paused",
+      "pause": "Pause",
+      "resume": "Resume",
+      "save": "Save",
+      "create": "Add",
+      "cancel": "Cancel",
+      "confirmDelete": "Delete this appliance?",
+      "errLabel": "Give the appliance a name.",
+      "errEnergy": "Enter the energy per run in kWh.",
+      "errPower": "Enter the power draw in kW.",
+      "errWindow": "The earliest hour must be before the finish hour.",
+      "types": {
+        "ev": "Electric car",
+        "washer": "Washing machine",
+        "dishwasher": "Dishwasher",
+        "water_heater": "Water heater",
+        "home_battery": "Home battery",
+        "dryer": "Tumble dryer",
+        "pool_pump": "Pool pump",
+        "other": "Other"
+      }
+    },
+    "errors": {
+      "signIn": "Sign in to manage your appliances.",
+      "invalidInput": "Please check the appliance details and try again.",
+      "windowOrder": "The earliest hour must be before the finish hour.",
+      "couldNotCreate": "Could not add the appliance.",
+      "couldNotUpdate": "Could not update the appliance.",
+      "couldNotDelete": "Could not delete the appliance."
+    },
+    "monthly": {
+      "kicker": "Estimated saving",
+      "perMonth": "/month",
+      "body": "That is what you save charging {appliance} in the cheapest hours instead of any hour — about {perRun} per charge, ~{runs} charges a month. On your final price, in euros."
+    },
+    "ledger": {
+      "kicker": "You've already saved",
+      "thisMonth": "this month",
+      "thisYear": "this year",
+      "body": "That is what you've already saved by charging at the right hours across {days} days — on your final price, in euros."
+    }
+  },
+  "signin": {
+    "back": "Back",
+    "title": "Sign in to Voltwise",
+    "subtitle": "We'll email you a magic link. No password required.",
+    "privacy": "By continuing you agree we may process your invoice and consumption data per the privacy policy. We never sell user data.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "submit": "Send magic link",
+    "sending": "Sending link…",
+    "checkInbox": "Check your inbox",
+    "linkSent": "We sent a sign-in link to <mail>{email}</mail>. The link is valid for 60 minutes.",
+    "invalidEmail": "Please enter a valid email address.",
+    "genericError": "Something went wrong. Try again?"
+  },
+  "settings": {
+    "kicker": "Account",
+    "title": "Settings",
+    "displayName": "Name (optional)",
+    "displayNamePlaceholder": "What should we call you?",
+    "country": "Meter country",
+    "contractedKva": "Contracted power (kW)",
+    "contractedKvaHint": "Found on your bill (e.g. 3.45, 6.9, 10.35). Use 6.9 if unsure.",
+    "whatsapp": "WhatsApp number",
+    "whatsappPlaceholder": "+351912345678",
+    "whatsappHint": "In international format (+351 for Portugal, +34 for Spain). Needed to receive WhatsApp alerts. Leave blank to skip it.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Saved!",
+    "errors": {
+      "invalidKva": "Invalid power. Enter a value between 0.1 and 100 kW.",
+      "invalidWhatsapp": "Invalid number. Use the +351 or +34 format followed by 9 digits.",
+      "invalidCountry": "Invalid country.",
+      "saveFailed": "Could not save. Please try again."
+    }
+  },
+  "onboarding": {
+    "title": "Welcome to Voltwise",
+    "description": "One question and you're in. Pick the country your meter is in — then, in a few taps, we'll show you how much you save each month by charging at the right hours. No invoice, no CSV.",
+    "pickError": "Pick a country to continue.",
+    "settingUp": "Setting up…",
+    "continue": "Continue",
+    "countries": {
+      "PT": {
+        "subtitle": "MIBEL — PT zone",
+        "blurb": "OMIE PT prices, EDP / Galp / Coopérnico tariffs, E-Redes consumption import."
+      },
+      "ES": {
+        "subtitle": "MIBEL — ES zone",
+        "blurb": "OMIE ES prices, Endesa / Iberdrola / Octopus tariffs, Datadis consumption import."
+      }
+    },
+    "back": "Back",
+    "load": {
+      "prompt": "What should we start saving on?",
+      "promptHint": "Pick your main load. We'll compute tomorrow's cheapest window right away — in euros on your final price.",
+      "profiles": {
+        "ev": "Electric car",
+        "water_heater": "Water heater",
+        "washer": "Washing machine",
+        "dishwasher": "Dishwasher"
+      },
+      "energyLabel": "Energy per charge (kWh)",
+      "daysLabel": "Days per week",
+      "availabilityLabel": "When can it run?",
+      "availability": {
+        "overnight": "Overnight",
+        "daytime": "Daytime",
+        "anytime": "Anytime"
+      },
+      "availabilityHint": {
+        "overnight": "We optimise in the early-morning valley (00:00–08:00), when power is cheapest.",
+        "daytime": "We find the cheapest hour between 9:00 and 18:00.",
+        "anytime": "No constraints — we pick the cheapest hour of the whole day."
+      },
+      "cta": "See my saving",
+      "skip": "Skip this for now"
+    }
+  }
+}

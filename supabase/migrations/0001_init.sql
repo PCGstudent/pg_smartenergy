@@ -176,9 +176,9 @@ values
    '{"markup_eur_mwh": 30, "taxes": {"iva": 0.06}}'::jsonb,
    '{"fixed_monthly_eur": 6.0}'::jsonb),
   ('ES', 'Endesa', 'One Luz', 'fixed',
-   '{"fixed_eur_kwh": 0.142, "taxes": {"iva": 0.21}}'::jsonb,
+   '{"fixed_eur_kwh": 0.142, "taxes": {"iva": 0.10}}'::jsonb,
    '{"fixed_monthly_eur": 9.8}'::jsonb),
   ('ES', 'Octopus Energy', 'Octopus Indexada', 'indexed',
-   '{"markup_eur_mwh": 25, "taxes": {"iva": 0.21}}'::jsonb,
+   '{"markup_eur_mwh": 25, "taxes": {"iva": 0.10}}'::jsonb,
    '{"fixed_monthly_eur": 4.5}'::jsonb)
 on conflict do nothing;

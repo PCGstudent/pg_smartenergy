@@ -12,6 +12,9 @@ import { PriceChart } from './price-chart'
 import { PriceNow } from './price-now'
 import { NextBestAction } from './next-best-action'
 import { GoldenHoursList } from './golden-hours-list'
+import { AuditSavingsCard } from './audit-savings-card'
+import { deriveVolatility, formatCentsOrFree } from '@/lib/pricing/volatility'
+import type { LatestUserAudit } from '@/lib/db/invoice-queries'
 
 export interface ScoredHourSerialized {
   ts: string
@@ -21,12 +24,21 @@ export interface ScoredHourSerialized {
   category: 'golden' | 'cheap' | 'normal' | 'expensive' | 'spike' | 'free' | 'negative'
 }
 
+/** Action params with Dates serialized to ISO strings for the client boundary. */
+export interface ActionParamsSerialized {
+  negative?: boolean
+  savingsPct?: number
+  alternativeTs?: string
+  alternativeEurKwh?: number
+}
+
 export interface ActionSerialized {
   kind: 'free' | 'cheap' | 'avoid'
   ts: string
   priceEurKwh: number
-  headline: string
-  detail: string
+  /** How the ranking was computed: 'final' allows behavioural advice, 'wholesale' is informational only. */
+  basis: 'final' | 'wholesale'
+  params: ActionParamsSerialized
 }
 
 export function DashboardView({
@@ -34,13 +46,17 @@ export function DashboardView({
   hours,
   action,
   hasData,
+  latestAudit,
+  locale,
 }: {
   zone: 'PT' | 'ES'
   hours: ScoredHourSerialized[]
   action: ActionSerialized | null
   hasData: boolean
+  latestAudit?: LatestUserAudit | null
+  locale?: string
 }) {
-  const stats = useMemo(() => deriveStats(hours), [hours])
+  const stats = useMemo(() => deriveVolatility(hours.map((h) => h.priceEurKwh)), [hours])
   const t = useTranslations('dashboard')
   const tCountry = useTranslations('common.country')
 
@@ -63,6 +79,17 @@ export function DashboardView({
         </div>
       </header>
 
+      {latestAudit ? (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mb-4"
+        >
+          <AuditSavingsCard audit={latestAudit} locale={locale ?? 'pt'} />
+        </motion.div>
+      ) : null}
+
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -79,20 +106,26 @@ export function DashboardView({
           </CardHeader>
           <CardContent>
             <div className="num text-3xl font-semibold">
-              {(stats.spread * 100).toFixed(0)}%
+              {stats.spreadCents.toFixed(1)}¢
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t('volatility.spreadDetail', { x: stats.spreadX.toFixed(1) })}
+            <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+              {t('volatility.spreadSuffix')}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t('volatility.spreadDetail', {
+                low: formatCentsOrFree(stats.minCents, t('golden.free')),
+                peak: formatCentsOrFree(stats.maxCents, t('golden.free')),
+              })}
             </p>
             <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
               <Stat
                 label={t('volatility.lowest')}
-                value={`${stats.minCents.toFixed(2)}¢`}
+                value={formatCentsOrFree(stats.minCents, t('golden.free'))}
                 accent="text-primary"
               />
               <Stat
                 label={t('volatility.peak')}
-                value={`${stats.maxCents.toFixed(2)}¢`}
+                value={formatCentsOrFree(stats.maxCents, t('golden.free'))}
                 accent="text-destructive"
               />
             </div>
@@ -116,18 +149,6 @@ export function DashboardView({
       <div className="mt-8 text-xs text-muted-foreground">{t('footnote')}</div>
     </div>
   )
-}
-
-function deriveStats(hours: ScoredHourSerialized[]) {
-  if (hours.length === 0) {
-    return { minCents: 0, maxCents: 0, spread: 0, spreadX: 0 }
-  }
-  const prices = hours.map((h) => h.priceEurKwh * 100)
-  const min = Math.min(...prices)
-  const max = Math.max(...prices)
-  const spread = max > 0 ? 1 - min / max : 0
-  const spreadX = min > 0 ? max / min : 0
-  return { minCents: min, maxCents: max, spread, spreadX }
 }
 
 function Stat({ label, value, accent }: { label: string; value: string; accent: string }) {

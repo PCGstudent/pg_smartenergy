@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { Sparkles } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 import { getSession } from '@/lib/supabase/auth'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { OnboardingForm } from './onboarding-form'
@@ -15,7 +16,10 @@ export default async function OnboardingPage({
 }: {
   searchParams: Promise<SearchParams>
 }) {
-  const session = await getSession()
+  const [session, t] = await Promise.all([
+    getSession(),
+    getTranslations('onboarding'),
+  ])
   // Middleware should have caught this, but belt + suspenders.
   if (!session) redirect('/signin?next=/onboarding')
 
@@ -36,12 +40,9 @@ export default async function OnboardingPage({
               <Sparkles className="h-4 w-4 text-primary" />
             </div>
             <CardTitle className="text-base normal-case tracking-normal text-foreground">
-              Welcome to Voltwise
+              {t('title')}
             </CardTitle>
-            <CardDescription>
-              One question and you&apos;re in. Pick the country your meter is in — we&apos;ll
-              configure the right OMIE zone, tariff catalog, and grid operator.
-            </CardDescription>
+            <CardDescription>{t('description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <OnboardingForm next={next ?? '/dashboard'} />

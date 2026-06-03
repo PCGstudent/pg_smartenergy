@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { eurMwhToCentsKwh } from '@/lib/utils'
 import { deleteAlert, updateAlert } from '@/app/alerts/actions'
 import type { AlertRecord } from '@/lib/db/alert-queries'
 
@@ -69,7 +70,7 @@ function AlertRow({ alert }: { alert: AlertRecord }) {
               {threshold != null ? (
                 <>
                   {t('thresholdLabel')}{' '}
-                  <span className="num">€{threshold.toFixed(0)}/MWh</span> ·{' '}
+                  <span className="num">{fmtCentsKwh(eurMwhToCentsKwh(threshold))}¢/kWh</span> ·{' '}
                 </>
               ) : null}
               {t('channelsLabel')} {alert.channels.join(', ') || '—'}
@@ -98,4 +99,9 @@ function AlertRow({ alert }: { alert: AlertRecord }) {
 
 function pad(n: number): string {
   return n.toString().padStart(2, '0')
+}
+
+/** ¢/kWh with at most one decimal, trimming a trailing ".0" (e.g. 5, 5.5). */
+function fmtCentsKwh(centsKwh: number): string {
+  return Number(centsKwh.toFixed(1)).toString()
 }

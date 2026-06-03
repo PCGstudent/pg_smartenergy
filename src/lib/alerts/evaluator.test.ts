@@ -55,6 +55,34 @@ describe('evaluateAlert — negative', () => {
   })
 })
 
+describe('evaluateAlert — reason carries no price figure (product rule #2)', () => {
+  // The evaluator has no tariff context, so it must NOT embed any ¢/kWh / €/kWh number in
+  // `reason`: a raw-wholesale figure under-states the real all-in bill and is never shown
+  // to users. The dispatcher builds the user-facing copy on the FINAL price instead.
+  const cases: Array<{ type: 'free_energy' | 'negative' | 'cheap_hour' | 'spike'; price: number }> = [
+    { type: 'free_energy', price: 0.5 },
+    { type: 'negative', price: -5 },
+    { type: 'cheap_hour', price: 30 },
+    { type: 'spike', price: 250 },
+  ]
+  for (const { type, price } of cases) {
+    it(`omits any price figure for ${type}`, () => {
+      const threshold = type === 'cheap_hour' ? 50 : type === 'spike' ? 200 : null
+      const matches = evaluateAlert(
+        { ...baseAlert, type, thresholdEurMwh: threshold },
+        [priceAt(1, price)],
+        NOW,
+      )
+      expect(matches).toHaveLength(1)
+      const reason = matches[0]!.reason
+      // No currency/per-unit token of any kind.
+      expect(reason).not.toMatch(/¢|€|kWh|MWh/i)
+      // And specifically not the raw-wholesale ¢/kWh the old helper produced (price/10).
+      expect(reason).not.toContain((price / 10).toFixed(2))
+    })
+  }
+})
+
 describe('evaluateAlert — cheap_hour', () => {
   it('respects custom threshold', () => {
     const prices = [priceAt(1, 30), priceAt(2, 80), priceAt(3, 25)]

@@ -23,9 +23,41 @@
   },
   "nav": {
     "dashboard": "Panel",
+    "plan": "Plan",
     "auditor": "Auditor",
     "alerts": "Alertas",
-    "signIn": "Iniciar sesión"
+    "market": "Mercado",
+    "signIn": "Iniciar sesión",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "market": {
+    "kicker": "MIBEL — Mercado Ibérico",
+    "title": "Precios de Mercado",
+    "subtitle": "Precios OMIE hora a hora para Portugal y España. Últimos 30 días.",
+    "zonePT": "Portugal",
+    "zoneES": "España",
+    "stats": {
+      "avg": "Media",
+      "min": "Mínimo",
+      "max": "Máximo",
+      "cheapHours": "Horas baratas",
+      "cheapHoursHint": "% de horas por debajo de 50 €/MWh en los últimos 30 días",
+      "negativeHours": "Horas negativas",
+      "negativeHoursHint": "% de horas con precio negativo (la red te paga por consumir)",
+      "negativeCallout": "{pct}% de las horas en los últimos 30 días tuvieron precio negativo.",
+      "unit": "€/MWh"
+    },
+    "charts": {
+      "dailyTitle": "Precio medio diario (90 días)",
+      "hourlyTitle": "Perfil horario medio (30 días)",
+      "hourlyHint": "Hora local Madrid/Lisboa — ideal para saber cuándo usar electrodomésticos",
+      "price": "Precio (€/MWh)",
+      "hour": "Hora",
+      "day": "Día"
+    },
+    "noData": "Sin datos disponibles para este período.",
+    "finalPriceNote": "Estos son precios mayoristas del mercado (€/MWh). El consejo que recibes en el Panel y en el Plan usa tu precio final, en €/kWh."
   },
   "landing": {
     "badge": "Energía ibérica, descifrada",
@@ -58,6 +90,24 @@
         "body": "Conecta un enchufe Shelly o Tuya y deja que Voltwise programe tus electrodomésticos."
       }
     },
+    "howItWorks": {
+      "kicker": "Tres minutos: de escéptico a ahorrador",
+      "heading": "El mercado de la energía no está roto. Solo está escondido.",
+      "steps": {
+        "market": {
+          "title": "Mira el mercado mayorista",
+          "body": "Descargamos los precios de MIBEL para España y Portugal, hora a hora. El Oráculo te muestra las franjas más baratas y más caras — en céntimos por kWh, sin tecnicismos."
+        },
+        "audit": {
+          "title": "Audita tu última factura",
+          "body": "Arrastra el PDF de Endesa, Iberdrola, EDP o Naturgy. Nuestra IA lo lee, cruza tu consumo con una tarifa indexada y te dice — al euro — cuánto habrías pagado."
+        },
+        "save": {
+          "title": "Ahorra automáticamente",
+          "body": "Recibe alertas push o WhatsApp antes de que la energía sea gratis. Conecta un enchufe inteligente y Voltwise programa el lavavajillas, la carga del coche y el termo en las horas doradas."
+        }
+      }
+    },
     "closer": {
       "headline": "Un PDF. Dos minutos. Dinero real de vuelta.",
       "body": "La mayoría de hogares ibéricos tienen una tarifa fija que cuesta ~30% más que la indexada. Descúbrelo — gratis, sin tarjeta, sin llamadas.",
@@ -72,16 +122,92 @@
     "title": "El tiempo energético de hoy",
     "volatility": {
       "title": "Volatilidad",
-      "spreadSuffix": "% de amplitud",
-      "spreadDetail": "La hora más barata es {x}× más barata que el pico.",
+      "spreadSuffix": "¢/kWh de amplitud",
+      "spreadDetail": "De la hora más barata ({low}) al pico ({peak}).",
       "lowest": "Mínimo",
       "peak": "Pico"
+    },
+    "priceNow": {
+      "title": "Ahora mismo",
+      "noPrice": "Aún no hay precio en directo.",
+      "perKwh": "/kWh"
+    },
+    "tones": {
+      "free": {
+        "label": "Energía gratis",
+        "advice": "Enciende todo lo que puedas. La red te está pagando por consumir."
+      },
+      "golden": {
+        "label": "Hora dorada",
+        "advice": "La franja más barata del día. Pon el lavavajillas y el coche a cargar ahora."
+      },
+      "cheap": {
+        "label": "Barato",
+        "advice": "Precio cómodo. Úsalo con libertad."
+      },
+      "spike": {
+        "label": "Pico de precio",
+        "advice": "Evita electrodomésticos pesados. Espera a la próxima hora dorada."
+      },
+      "expensive": {
+        "label": "Caro",
+        "advice": "Por encima de la media. Aplaza consumos no urgentes."
+      },
+      "normal": {
+        "label": "Normal",
+        "advice": "Precio medio. Nada que optimizar ahora mismo."
+      }
+    },
+    "golden": {
+      "title": "Planifica tu día",
+      "subtitle": "Usa las franjas verdes. Evita las rojas.",
+      "goldenTitle": "Horas doradas",
+      "goldenEmpty": "Sin franjas baratas destacadas en las próximas 30h.",
+      "avoidTitle": "Evita estas horas",
+      "spikesEmpty": "Sin picos a la vista.",
+      "today": "hoy",
+      "free": "GRATIS"
+    },
+    "solar": {
+      "summary": "¿Por qué el mediodía es más barato?",
+      "body": "A mediodía hay tanta energía solar en la red ibérica que el precio cae — a veces se vuelve negativo. Por eso la hora más barata es de día, no de madrugada. Al atardecer el sol baja y el precio se dispara."
     },
     "chart": {
       "title": "Próximas 36 horas",
       "subtitle": "Precio mayorista hora a hora · Hora de Madrid"
     },
+    "auditCard": {
+      "kicker": "Tu última auditoría",
+      "saving": "Puedes ahorrar",
+      "perPeriod": "en el período facturado",
+      "switchTo": "Cambiar a",
+      "currentProvider": "Proveedor actual",
+      "viewAudit": "Ver auditoría completa",
+      "noSavings": "¡Estás en una buena tarifa! El ahorro máximo posible es inferior a 1€.",
+      "period": "Período"
+    },
     "footnote": "Datos del mercado diario OMIE. Las comparaciones de tarifa no incluyen el término fijo de potencia ni impuestos, salvo que tu factura haya sido auditada.",
+    "action": {
+      "title": "Próxima mejor acción",
+      "empty": "Nada destacable — los precios se ven estables de aquí en adelante.",
+      "at": "a las",
+      "zone": "Lisboa",
+      "free": {
+        "headline": "La energía será GRATIS pronto",
+        "headlineNegative": "La energía será NEGATIVA pronto",
+        "detailFinal": "Tu precio final baja a {cents}. Pon la lavadora, la secadora y carga el coche.",
+        "detailWholesale": "El precio mayorista baja a {cents}. Una buena ventana para mover consumos altos."
+      },
+      "cheap": {
+        "headline": "Hora más barata: {time}",
+        "detailFinal": "A {cents} pagarás un {pct}% menos que ahora. Buen momento para electrodomésticos pesados.",
+        "detailWholesale": "El mayorista llega a {cents}, un {pct}% por debajo de ahora. El precio final depende de tu tarifa."
+      },
+      "avoid": {
+        "headline": "Evita consumos altos a las {time}",
+        "detail": "El precio sube a {cents}. Espera hasta las {altTime} ({altCents})."
+      }
+    },
     "empty": {
       "badge": "Aún no hay precios importados",
       "titlePT": "Importa el feed OMIE de hoy para ver Portugal en directo",
@@ -182,6 +308,8 @@
       "currentTariff": "Tarifa actual",
       "annualSavings": "Ahorro anualizado (est.)",
       "annualSuffix": "/ año · {pct}% más barato",
+      "annualSuffixIndexed": "/ año (si OMIE igual al período) · {pct}% en este período",
+      "eredesBadge": "datos reales distribuidora",
       "switchCta": "Cambiar y ahorrar",
       "allAlternatives": "Todas las alternativas comprobadas",
       "table": {
@@ -196,6 +324,23 @@
       "footnote": "La comparación incluye energía + término fijo de potencia + impuestos ibéricos (IE/CSA + IVA). Las facturas reales pueden diferir ~5% de estas proyecciones por discriminación horaria, bono social y tasas específicas del comercializador.",
       "lowConfidence": "La confianza de la extracción fue {percent}% — verifica los números de arriba contra tu factura real.",
       "storedAt": "Factura guardada en privado en"
+    },
+    "eredes": {
+      "title": "Mejorar con datos reales de tu distribuidora",
+      "description": "Descarga tu consumo horario en CSV desde el portal de tu distribuidora (REE / Datadis)",
+      "chooseFile": "Elegir CSV…",
+      "import": "Importar y recalcular",
+      "importing": "Importando…",
+      "success": "Consumo real importado. Actualizando resultados…",
+      "hint": "Datadis.es → Mis consumos → Seleccionar período → Exportar CSV (granularidad: Hora).",
+      "errors": {
+        "csvOnly": "Solo archivos .csv.",
+        "pickFirst": "Elige un archivo CSV primero."
+      }
+    },
+    "reaudit": {
+      "label": "Recalcular con tarifas actuales",
+      "running": "Recalculando…"
     },
     "errors": {
       "invalidPath": "Ruta de subida no válida.",
@@ -232,12 +377,12 @@
     },
     "create": {
       "title": "Nueva alerta",
-      "description": "País: {country} · el evaluador corre cada hora a :15 hora de Madrid.",
+      "description": "País: {country} · Comprobamos los precios cada hora, al minuto :15 (hora de Madrid).",
       "labels": {
         "type": "Tipo",
         "thresholdPrefix": "Umbral (",
         "thresholdSuffix": ")",
-        "thresholdHint": "≈ {value}¢/kWh",
+        "thresholdHint": "precio mayorista en ¢/kWh — tu precio final es más alto",
         "channels": "Canales",
         "quietStart": "Inicio de horas silenciosas",
         "quietEnd": "Fin de horas silenciosas",
@@ -246,18 +391,21 @@
       "channels": {
         "push": "Push (navegador)",
         "whatsapp": "WhatsApp",
-        "whatsappHint": "(requiere número +351 / +34 en el perfil · stub por ahora)"
+        "whatsappHint": "(requiere número +351 / +34 en el perfil · próximamente)",
+        "whatsappNeedsNumber": "(añade tu número en ajustes)",
+        "email": "Email",
+        "emailHint": "(el respaldo fiable)"
       },
       "errors": {
         "pickChannel": "Elige al menos un canal.",
-        "thresholdRange": "El umbral debe ser un número entre -200 y 1000 €/MWh."
+        "thresholdRange": "El umbral debe ser un número entre -20 y 100 ¢/kWh."
       },
       "submitIdle": "Crear alerta",
       "submitSaving": "Guardando…",
       "types": {
         "free_energy": {
           "label": "Energía gratis",
-          "description": "Avísame cuando el precio mayorista caiga por debajo de 1 €/MWh."
+          "description": "Avísame cuando el precio mayorista quede prácticamente a cero."
         },
         "negative": {
           "label": "Precio negativo",
@@ -294,13 +442,241 @@
       "title": "Disparos recientes",
       "fallback": "Alerta"
     },
+    "healthCheck": {
+      "title": "Tus alertas no tienen por dónde llegar",
+      "body": "Tienes alertas activas pero ningún canal configurado, así que no te llegan los avisos. Activa un canal para empezar a recibirlos.",
+      "cta": "Configurar un canal"
+    },
     "errors": {
       "signInCreate": "Inicia sesión para crear alertas.",
       "signInUpdate": "Inicia sesión para actualizar alertas.",
       "signInDelete": "Inicia sesión para borrar alertas.",
       "couldNotCreate": "No se pudo crear la alerta.",
       "couldNotUpdate": "No se pudo actualizar la alerta.",
-      "couldNotDelete": "No se pudo borrar la alerta."
+      "couldNotDelete": "No se pudo eliminar la alerta."
+    },
+    "daily": {
+      "anchor": {
+        "title": "🔋 Tu franja de mañana",
+        "body": "Pon {appliance} entre {window} mañana — precio final ~{price}, unos {cost} por la carga completa. Ahorras {saved} frente a la peor hora."
+      },
+      "free": {
+        "title": "⚡ Energía casi gratis mañana",
+        "body": "Mañana entre {window} la energía baja a ~{price}. Aprovecha para lavar, cargar el coche o calentar agua."
+      },
+      "negative": {
+        "title": "💸 Precio negativo mañana",
+        "body": "Mañana entre {window} la red llega a pagarte por consumir. Es el mejor momento para usar todo lo que puedas."
+      },
+      "spike": {
+        "title": "🔴 Pico de precio mañana",
+        "body": "Mañana entre {window} la energía se dispara hasta ~{price}. Evita cargas pesadas a esas horas y ahorra."
+      },
+      "emailCta": "Ver mi plan",
+      "emailFootnote": "Recibes este email porque activaste los avisos diarios en Voltwise."
+    },
+    "hourly": {
+      "cheap_hour": {
+        "title": "🟢 Hora barata en camino",
+        "body": "A las {time} la energía se pone barata. Buen momento para lavar, cargar el coche o calentar agua."
+      },
+      "free_energy": {
+        "title": "⚡ Energía casi gratis en camino",
+        "body": "A las {time} la energía sale casi gratis. Aprovecha para encender todo lo que puedas."
+      },
+      "negative": {
+        "title": "💸 Precio negativo en camino",
+        "body": "A las {time} la red llega a pagarte por consumir. Es el mejor momento para usar todo lo que puedas."
+      },
+      "spike": {
+        "title": "🔴 Pico de precio en camino",
+        "body": "A las {time} la energía se dispara. Evita cargas pesadas a esa hora y ahorra."
+      }
+    }
+  },
+  "plan": {
+    "kicker": "Hoy y Mañana",
+    "title": "Tu plan de carga",
+    "subtitle": "Tomamos los precios de mañana del mercado diario y tus electrodomésticos, y te decimos la hora más barata para encender cada uno — en euros sobre tu precio final, no en megavatios-hora mayoristas.",
+    "best": {
+      "kicker": "Mejor franja mañana",
+      "body": "Enciéndelo {date} empezando en esta franja — tu precio final ronda los {price} de media, unos {cost} por el ciclo completo.",
+      "savingLabel": "Ahorras",
+      "savingHint": "frente a la peor franja equivalente",
+      "noAppliancesTitle": "Añade un electrodoméstico para tener un plan",
+      "noAppliancesBody": "Cuéntanos tu coche eléctrico, lavadora o termo abajo y encontramos su franja más barata para mañana.",
+      "noWindow": "Ninguno de tus electrodomésticos cabe en su franja de disponibilidad mañana. Amplía sus horas abajo.",
+      "outsideBody": "Tu franja de disponibilidad es demasiado corta para esta carga mañana. Te mostramos las {count} horas más baratas del día: el precio final ronda los {price} de media, unos {cost} por el ciclo completo.",
+      "widenHint": "Estas horas quedan fuera de tu franja — amplía las horas en los electrodomésticos de abajo para poder usarlas."
+    },
+    "chart": {
+      "title": "Precio final — {date}",
+      "subtitle": "Tu €/kWh final, hora a hora",
+      "range": "{min} a {max}",
+      "finalPrice": "Precio final",
+      "recommended": "Franja recomendada"
+    },
+    "solar": {
+      "summary": "¿Por qué el mediodía es más barato?",
+      "body": "A mediodía hay tanta energía solar en la red ibérica que el precio cae — a veces se vuelve negativo. Por eso la hora más barata es de día, no de madrugada. Al atardecer el sol baja y el precio se dispara.",
+      "legend": {
+        "negative": "Negativo / gratis",
+        "cheap": "Barato",
+        "peak": "Pico"
+      }
+    },
+    "perAppliance": {
+      "title": "Cada electrodoméstico",
+      "window": "{range} · {cost}",
+      "noWindow": "Ninguna franja cabe en su horario mañana",
+      "saves": "Ahorra",
+      "splitBadge": "ciclo dividido",
+      "splitHint": "Más barato si se pausa y reanuda en horas baratas separadas.",
+      "outsideWindow": "Las {count} horas más baratas de mañana: {range} · ~{price}",
+      "widenHint": "amplía las horas abajo"
+    },
+    "pending": {
+      "title": "Los precios de mañana aún no han salido",
+      "body": "OMIE publica la subasta diaria sobre las 12:45 (hora de Madrid). Vuelve esta tarde y planificamos tu día completo con certeza.",
+      "marketCta": "Ver precios {zone}",
+      "tariffTitle": "Elige primero tu tarifa",
+      "tariffBody": "Necesitamos saber tu plan para convertir los precios mayoristas en tu precio real y completo. Configúralo en ajustes y tu plan aparecerá aquí.",
+      "tariffCta": "Ir a ajustes"
+    },
+    "appliances": {
+      "title": "Tus electrodomésticos",
+      "add": "Añadir electrodoméstico",
+      "addTitle": "Nuevo electrodoméstico",
+      "editTitle": "Editar electrodoméstico",
+      "empty": "Aún no hay electrodomésticos. Añade tu coche eléctrico, lavadora, lavavajillas o termo para empezar a planificar.",
+      "label": "Nombre",
+      "labelPlaceholder": "p. ej. Lavavajillas",
+      "type": "Tipo",
+      "energyKwh": "Energía por ciclo (kWh)",
+      "powerKw": "Potencia (kW)",
+      "earliestHour": "Hora más temprana",
+      "latestHour": "Terminar antes de",
+      "interruptible": "Se puede pausar y reanudar",
+      "interruptibleHint": "Las cargas interrumpibles (coches eléctricos, termos, baterías) pueden elegir las horas más baratas dispersas. Déjalo desactivado para un lavado que debe correr de una vez.",
+      "interruptibleBadge": "interrumpible",
+      "paused": "En pausa",
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "save": "Guardar",
+      "create": "Añadir",
+      "cancel": "Cancelar",
+      "confirmDelete": "¿Eliminar este electrodoméstico?",
+      "errLabel": "Dale un nombre al electrodoméstico.",
+      "errEnergy": "Indica la energía por ciclo en kWh.",
+      "errPower": "Indica la potencia en kW.",
+      "errWindow": "La hora más temprana debe ser anterior a la hora de fin.",
+      "types": {
+        "ev": "Coche eléctrico",
+        "washer": "Lavadora",
+        "dishwasher": "Lavavajillas",
+        "water_heater": "Termo eléctrico",
+        "home_battery": "Batería doméstica",
+        "dryer": "Secadora",
+        "pool_pump": "Bomba de piscina",
+        "other": "Otro"
+      }
+    },
+    "errors": {
+      "signIn": "Inicia sesión para gestionar tus electrodomésticos.",
+      "invalidInput": "Revisa los detalles del electrodoméstico e inténtalo de nuevo.",
+      "windowOrder": "La hora más temprana debe ser anterior a la hora de fin.",
+      "couldNotCreate": "No se pudo añadir el electrodoméstico.",
+      "couldNotUpdate": "No se pudo actualizar el electrodoméstico.",
+      "couldNotDelete": "No se pudo eliminar el electrodoméstico."
+    },
+    "monthly": {
+      "kicker": "Ahorro estimado",
+      "perMonth": "/mes",
+      "body": "Es lo que ahorras cargando {appliance} en las horas más baratas en vez de a cualquier hora — unos {perRun} por carga, ~{runs} cargas al mes. Sobre tu precio final, en euros."
+    },
+    "ledger": {
+      "kicker": "Ya has ahorrado",
+      "thisMonth": "este mes",
+      "thisYear": "este año",
+      "body": "Es lo que ya has ahorrado cargando a las horas adecuadas a lo largo de {days} días — sobre tu precio final, en euros."
+    }
+  },
+  "signin": {
+    "back": "Volver",
+    "title": "Inicia sesión en Voltwise",
+    "subtitle": "Te enviamos un enlace mágico por email. Sin contraseña.",
+    "privacy": "Al continuar, aceptas que podamos procesar los datos de tu factura y de tu consumo según la política de privacidad. Nunca vendemos datos de usuarios.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "submit": "Enviar enlace mágico",
+    "sending": "Enviando enlace…",
+    "checkInbox": "Revisa tu bandeja de entrada",
+    "linkSent": "Enviamos un enlace de acceso a <mail>{email}</mail>. El enlace es válido durante 60 minutos.",
+    "invalidEmail": "Introduce una dirección de email válida.",
+    "genericError": "Algo salió mal. ¿Reintentar?"
+  },
+  "settings": {
+    "kicker": "Cuenta",
+    "title": "Ajustes",
+    "displayName": "Nombre (opcional)",
+    "displayNamePlaceholder": "¿Cómo quieres que te llamemos?",
+    "country": "País del contador",
+    "contractedKva": "Potencia contratada (kW)",
+    "contractedKvaHint": "Encuéntralo en tu factura (ej.: 3.45, 6.9, 10.35). Usa 6.9 si no estás seguro.",
+    "whatsapp": "Número de WhatsApp",
+    "whatsappPlaceholder": "+34612345678",
+    "whatsappHint": "En formato internacional (+34 para España, +351 para Portugal). Necesario para recibir avisos por WhatsApp. Déjalo en blanco para no usarlo.",
+    "save": "Guardar cambios",
+    "saving": "Guardando…",
+    "saved": "¡Guardado!",
+    "errors": {
+      "invalidKva": "Potencia inválida. Introduce un valor entre 0.1 y 100 kW.",
+      "invalidWhatsapp": "Número inválido. Usa el formato +34 o +351 seguido de 9 dígitos.",
+      "invalidCountry": "País inválido.",
+      "saveFailed": "No se pudo guardar. Inténtalo de nuevo."
+    }
+  },
+  "onboarding": {
+    "title": "Bienvenido a Voltwise",
+    "description": "Una pregunta y listo. Elige el país de tu contador — luego, en unos toques, te decimos cuánto ahorras al mes cargando a las horas correctas. Sin factura, sin CSV.",
+    "pickError": "Elige un país para continuar.",
+    "settingUp": "Configurando…",
+    "continue": "Continuar",
+    "countries": {
+      "PT": {
+        "subtitle": "MIBEL — zona PT",
+        "blurb": "Precios OMIE PT, tarifas EDP / Galp / Coopérnico, importación de consumo E-Redes."
+      },
+      "ES": {
+        "subtitle": "MIBEL — zona ES",
+        "blurb": "Precios OMIE ES, tarifas Endesa / Iberdrola / Octopus, importación de consumo Datadis."
+      }
+    },
+    "back": "Volver",
+    "load": {
+      "prompt": "¿Qué quieres poner a ahorrar primero?",
+      "promptHint": "Elige tu carga principal. Calculamos ya la franja más barata de mañana — en euros sobre tu precio final.",
+      "profiles": {
+        "ev": "Coche eléctrico",
+        "water_heater": "Termo eléctrico",
+        "washer": "Lavadora",
+        "dishwasher": "Lavavajillas"
+      },
+      "energyLabel": "Energía por carga (kWh)",
+      "daysLabel": "Días por semana",
+      "availabilityLabel": "¿Cuándo puede encenderse?",
+      "availability": {
+        "overnight": "De noche",
+        "daytime": "De día",
+        "anytime": "A cualquier hora"
+      },
+      "availabilityHint": {
+        "overnight": "Optimizamos en el valle de la madrugada (00h–08h), cuando la energía es más barata.",
+        "daytime": "Buscamos la hora más barata entre las 9h y las 18h.",
+        "anytime": "Sin restricciones — elegimos la hora más barata de todo el día."
+      },
+      "cta": "Ver mi ahorro",
+      "skip": "Me lo salto por ahora"
     }
   }
 }

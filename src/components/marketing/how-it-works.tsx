@@ -1,38 +1,27 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import { FileText, LineChart, Zap } from 'lucide-react'
 
+/** Step visuals only — titles and bodies come from the i18n catalog. */
 const STEPS = [
-  {
-    n: '01',
-    icon: LineChart,
-    title: 'See the day-ahead market',
-    body: "We pull MIBEL prices for Portugal and Spain hour by hour. The Oracle shows you the cheapest and most expensive windows — in cents per kWh, not jargon.",
-  },
-  {
-    n: '02',
-    icon: FileText,
-    title: 'Audit your last bill',
-    body: "Drag in your EDP, Endesa, Iberdrola or Galp PDF. Our AI reads it, matches your consumption against an indexed tariff, and tells you — to the euro — what you would have paid instead.",
-  },
-  {
-    n: '03',
-    icon: Zap,
-    title: 'Save automatically',
-    body: "Get push or WhatsApp alerts before energy goes free. Connect a smart plug and Voltwise schedules your dishwasher, EV charger, and water heater on golden hours.",
-  },
+  { n: '01', key: 'market', icon: LineChart },
+  { n: '02', key: 'audit', icon: FileText },
+  { n: '03', key: 'save', icon: Zap },
 ] as const
 
 export function HowItWorks() {
+  const t = useTranslations('landing.howItWorks')
+
   return (
     <section className="container py-24">
       <div className="mb-12 max-w-2xl">
         <p className="mb-3 text-xs font-medium uppercase tracking-wider text-primary">
-          Three minutes from skeptic to saver
+          {t('kicker')}
         </p>
         <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
-          The energy market isn&apos;t broken. It&apos;s just hidden.
+          {t('heading')}
         </h2>
       </div>
       <div className="grid gap-4 md:grid-cols-3">
@@ -51,8 +40,8 @@ export function HowItWorks() {
             <div className="mb-4 grid h-10 w-10 place-items-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/30">
               <step.icon className="h-4 w-4" />
             </div>
-            <h3 className="text-lg font-medium">{step.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{step.body}</p>
+            <h3 className="text-lg font-medium">{t(`steps.${step.key}.title`)}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{t(`steps.${step.key}.body`)}</p>
           </motion.div>
         ))}
       </div>

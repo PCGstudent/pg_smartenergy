@@ -1,9 +1,14 @@
 import { unstable_noStore as noStore } from 'next/cache'
 import { addHours } from 'date-fns'
+import { getLocale } from 'next-intl/server'
 import { getPricesInRange } from '@/lib/db/queries'
 import type { Zone } from '@/lib/db/queries'
 import type { MarketPrice } from '@/lib/db/schema'
 import { nextBestAction, scoreHours } from '@/lib/pricing/golden-hours'
+import { getSession } from '@/lib/supabase/auth'
+import { createSupabaseServer } from '@/lib/supabase/server'
+import { getLatestAuditForUser } from '@/lib/db/invoice-queries'
+import type { LatestUserAudit } from '@/lib/db/invoice-queries'
 import { DashboardView } from '@/components/dashboard/dashboard-view'
 
 export const dynamic = 'force-dynamic'
@@ -27,9 +32,21 @@ export default async function DashboardPage({
   const start = addHours(now, -6)
   const end = addHours(now, 30)
 
-  const prices = await safeFetchPrices(zone, start, end)
+  const [prices, session, locale] = await Promise.all([
+    safeFetchPrices(zone, start, end),
+    getSession(),
+    getLocale(),
+  ])
+
   const scored = scoreHours(prices)
   const action = nextBestAction(scored, now)
+
+  // Fetch latest audit only for authenticated users.
+  let latestAudit: LatestUserAudit | null = null
+  if (session?.user) {
+    const supa = await createSupabaseServer()
+    latestAudit = await getLatestAuditForUser(supa, session.user.id).catch(() => null)
+  }
 
   // Serialize for client component (Date → ISO).
   const serialized = scored.map((s) => ({
@@ -40,7 +57,18 @@ export default async function DashboardPage({
     category: s.category,
   }))
   const serializedAction = action
-    ? { ...action, ts: action.ts.toISOString() }
+    ? {
+        kind: action.kind,
+        ts: action.ts.toISOString(),
+        priceEurKwh: action.priceEurKwh,
+        basis: action.basis,
+        params: {
+          negative: action.params.negative,
+          savingsPct: action.params.savingsPct,
+          alternativeTs: action.params.alternativeTs?.toISOString(),
+          alternativeEurKwh: action.params.alternativeEurKwh,
+        },
+      }
     : null
 
   return (
@@ -49,6 +77,8 @@ export default async function DashboardPage({
       hours={serialized}
       action={serializedAction}
       hasData={prices.length > 0}
+      latestAudit={latestAudit}
+      locale={locale}
     />
   )
 }

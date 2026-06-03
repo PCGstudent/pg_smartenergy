@@ -7,7 +7,14 @@ import { useTranslations } from 'next-intl'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { centsKwhToEurMwh } from '@/lib/utils'
 import { createAlert, type CreateAlertInput } from '@/app/alerts/actions'
+
+// Threshold is shown/entered in ¢/kWh (the unit on the bill) but stored in €/MWh.
+// Old €/MWh bounds -200..1000 map to -20..100 ¢/kWh; default 50 €/MWh → 5 ¢/kWh.
+const THRESHOLD_MIN_CENTS_KWH = -20
+const THRESHOLD_MAX_CENTS_KWH = 100
+const DEFAULT_THRESHOLD_CENTS_KWH = '5'
 
 type AlertType = CreateAlertInput['type']
 
@@ -18,14 +25,22 @@ const TYPE_CONFIG: { code: AlertType; needsThreshold: boolean }[] = [
   { code: 'spike', needsThreshold: true },
 ]
 
-export function CreateAlertCard({ country }: { country: 'PT' | 'ES' }) {
+export function CreateAlertCard({
+  country,
+  hasWhatsapp = false,
+}: {
+  country: 'PT' | 'ES'
+  /** Whether the user has a WhatsApp number on their profile (gates the WhatsApp chip). */
+  hasWhatsapp?: boolean
+}) {
   const t = useTranslations('alerts.create')
   const tCountry = useTranslations('common.country')
   const [type, setType] = useState<AlertType>('free_energy')
-  const [thresholdEurMwh, setThresholdEurMwh] = useState<string>('50')
-  const [channels, setChannels] = useState<{ push: boolean; whatsapp: boolean }>({
+  const [thresholdCentsKwh, setThresholdCentsKwh] = useState<string>(DEFAULT_THRESHOLD_CENTS_KWH)
+  const [channels, setChannels] = useState<{ push: boolean; whatsapp: boolean; email: boolean }>({
     push: true,
     whatsapp: false,
+    email: false,
   })
   const [quietStart, setQuietStart] = useState<string>('23')
   const [quietEnd, setQuietEnd] = useState<string>('7')
@@ -36,19 +51,27 @@ export function CreateAlertCard({ country }: { country: 'PT' | 'ES' }) {
 
   const onSubmit = () => {
     setError(null)
-    const picked: ('push' | 'whatsapp')[] = []
+    const picked: ('push' | 'whatsapp' | 'email')[] = []
     if (channels.push) picked.push('push')
     if (channels.whatsapp) picked.push('whatsapp')
+    if (channels.email) picked.push('email')
     if (picked.length === 0) {
       setError(t('errors.pickChannel'))
       return
     }
 
-    const threshold = meta.needsThreshold ? Number(thresholdEurMwh) : null
-    if (meta.needsThreshold && (Number.isNaN(threshold!) || threshold! < -200 || threshold! > 1000)) {
+    const centsKwh = meta.needsThreshold ? Number(thresholdCentsKwh) : null
+    if (
+      meta.needsThreshold &&
+      (Number.isNaN(centsKwh!) ||
+        centsKwh! < THRESHOLD_MIN_CENTS_KWH ||
+        centsKwh! > THRESHOLD_MAX_CENTS_KWH)
+    ) {
       setError(t('errors.thresholdRange'))
       return
     }
+    // Persist in €/MWh — the evaluator and DB column are wholesale-scaled.
+    const threshold = centsKwh == null ? null : centsKwhToEurMwh(centsKwh)
 
     const qs = Number(quietStart)
     const qe = Number(quietEnd)
@@ -116,17 +139,18 @@ export function CreateAlertCard({ country }: { country: 'PT' | 'ES' }) {
           <div>
             <Label>
               {t('labels.thresholdPrefix')}
-              <span className="num">€/MWh</span>
+              <span className="num">¢/kWh</span>
               {t('labels.thresholdSuffix')} ·{' '}
               <span className="text-xs text-muted-foreground">
-                {t('labels.thresholdHint', { value: (Number(thresholdEurMwh) / 10).toFixed(2) })}
+                {t('labels.thresholdHint')}
               </span>
             </Label>
             <Input
               type="number"
               inputMode="decimal"
-              value={thresholdEurMwh}
-              onChange={(e) => setThresholdEurMwh(e.target.value)}
+              step="0.1"
+              value={thresholdCentsKwh}
+              onChange={(e) => setThresholdCentsKwh(e.target.value)}
               disabled={isPending}
               className="mt-2 max-w-xs"
             />
@@ -143,11 +167,19 @@ export function CreateAlertCard({ country }: { country: 'PT' | 'ES' }) {
               disabled={isPending}
             />
             <ChannelChip
+              label={t('channels.email')}
+              active={channels.email}
+              onClick={() => setChannels((c) => ({ ...c, email: !c.email }))}
+              disabled={isPending}
+              hint={t('channels.emailHint')}
+            />
+            <ChannelChip
               label={t('channels.whatsapp')}
               active={channels.whatsapp}
               onClick={() => setChannels((c) => ({ ...c, whatsapp: !c.whatsapp }))}
-              disabled={isPending}
-              hint={t('channels.whatsappHint')}
+              // Gate WhatsApp until a number is saved — otherwise the channel can never deliver.
+              disabled={isPending || !hasWhatsapp}
+              hint={hasWhatsapp ? undefined : t('channels.whatsappNeedsNumber')}
             />
           </div>
         </div>
@@ -219,7 +251,7 @@ function ChannelChip({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition ${
+      className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition disabled:cursor-not-allowed disabled:opacity-50 ${
         active
           ? 'border-primary/60 bg-primary/10 text-primary'
           : 'border-border/60 bg-card/40 text-muted-foreground hover:text-foreground'

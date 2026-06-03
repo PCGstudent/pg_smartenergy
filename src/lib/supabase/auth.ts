@@ -6,6 +6,7 @@ export interface AuthSession {
     country: 'PT' | 'ES' | null
     onboardedAt: string | null
     locale: string | null
+    contractedKva: number | null
   } | null
 }
 
@@ -23,7 +24,7 @@ export async function getSession(): Promise<AuthSession | null> {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('country, onboarded_at, locale')
+    .select('country, onboarded_at, locale, contracted_kva')
     .eq('id', user.id)
     .maybeSingle()
 
@@ -34,6 +35,7 @@ export async function getSession(): Promise<AuthSession | null> {
           country: (profile.country as 'PT' | 'ES' | null) ?? null,
           onboardedAt: (profile.onboarded_at as string | null) ?? null,
           locale: (profile.locale as string | null) ?? null,
+          contractedKva: profile.contracted_kva != null ? Number(profile.contracted_kva) : null,
         }
       : null,
   }

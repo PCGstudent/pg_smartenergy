@@ -1,0 +1,50 @@
+
+> voltwise@0.1.0 dev
+> next dev
+
+ ⚠ `experimental.typedRoutes` has been moved to `typedRoutes`. Please update your next.config.ts file accordingly.
+   ▲ Next.js 15.5.18
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.236:3000
+   - Environments: .env.local
+   - Experiments (use with caution):
+     ✓ typedRoutes
+
+ ✓ Starting...
+ ○ (serwist) Serwist is disabled.
+ ○ (serwist) Serwist is disabled.
+ ✓ Ready in 3.2s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 898ms (212 modules)
+ ○ Compiling /api/dev-login ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (101kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (231kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ✓ Compiled /api/dev-login in 2.5s (401 modules)
+ GET /api/dev-login?email=ux-test@voltwise.local&next=/plan 307 in 3525ms
+ ○ Compiling /plan ...
+ ✓ Compiled /plan in 13s (3679 modules)
+ GET /plan 200 in 16421ms
+ GET /plan 200 in 622ms
+ GET /plan 200 in 501ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 1076ms (3704 modules)
+ GET /dashboard 200 in 2377ms
+ ✓ Compiled in 2.7s (1323 modules)
+ ✓ Compiled in 378ms (1323 modules)
+ ✓ Compiled in 1544ms (1323 modules)
+ ✓ Compiled /dashboard in 419ms (1945 modules)
+ GET /dashboard 200 in 1806ms
+ ○ Compiling /api/dev-login ...
+ ✓ Compiled /api/dev-login in 913ms (1964 modules)
+ GET /api/dev-login?email=ux-test@voltwise.local&next=/plan 307 in 1750ms
+ ○ Compiling /plan ...
+ ✓ Compiled /plan in 1619ms (2395 modules)
+ GET /plan 200 in 3667ms
+ ○ Compiling /manifest.webmanifest ...
+ ✓ Compiled /manifest.webmanifest in 1331ms (3708 modules)
+ GET /manifest.webmanifest 200 in 1703ms
+ GET /manifest.webmanifest 200 in 26ms
+ GET /dashboard 200 in 1356ms
+ GET /api/dev-login?email=ux-test@voltwise.local&next=/dashboard 307 in 595ms
+ GET /dashboard 200 in 584ms
+ GET /dashboard 200 in 365ms

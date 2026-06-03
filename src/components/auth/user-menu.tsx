@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
-import { Bell, FileText, Globe2, LogOut, User2 } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
+import { Bell, FileText, Globe2, LogOut, Settings2, User2 } from 'lucide-react'
+import { localeFlags, type Locale } from '@/i18n/config'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,9 +19,12 @@ export interface UserMenuProps {
   country: 'PT' | 'ES' | null
 }
 
-export function UserMenu({ email, country }: UserMenuProps) {
+export function UserMenu({ email }: UserMenuProps) {
   const t = useTranslations()
-  const flag = country === 'ES' ? '🇪🇸' : country === 'PT' ? '🇵🇹' : null
+  // The trigger flag follows the ACTIVE UI locale (the language the user reads in),
+  // not their meter country — switching language updates the flag immediately.
+  const locale = useLocale() as Locale
+  const flag = localeFlags[locale]
 
   return (
     <DropdownMenu>
@@ -62,6 +66,12 @@ export function UserMenu({ email, country }: UserMenuProps) {
           <Link href="/alerts">
             <Bell className="h-3 w-3" />
             {t('common.alerts')}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/settings">
+            <Settings2 className="h-3 w-3" />
+            {t('common.settings')}
           </Link>
         </DropdownMenuItem>
         <LanguageSwitcher />

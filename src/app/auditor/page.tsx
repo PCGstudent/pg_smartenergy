@@ -4,7 +4,7 @@ import { ArrowRight, FileText, Sparkles } from 'lucide-react'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { getSession } from '@/lib/supabase/auth'
 import { createSupabaseServer } from '@/lib/supabase/server'
-import { listInvoicesForUser } from '@/lib/db/invoice-queries'
+import { listInvoicesForUser, getLatestAuditSavingsByInvoiceIds } from '@/lib/db/invoice-queries'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { UploadForm } from './upload-form'
@@ -22,7 +22,9 @@ export default async function AuditorIndexPage() {
     getLocale(),
   ])
   const invoices = await listInvoicesForUser(supa, session.user.id, 20).catch(() => [])
-  const dateLocale = locale === 'es' ? 'es-ES' : 'pt-PT'
+  const processedIds = invoices.filter(i => i.status === 'processed').map(i => i.id)
+  const savingsMap = await getLatestAuditSavingsByInvoiceIds(supa, processedIds).catch(() => new Map())
+  const dateLocale = locale === 'es' ? 'es-ES' : locale === 'en' ? 'en-GB' : 'pt-PT'
   const tz = locale === 'es' ? 'Europe/Madrid' : 'Europe/Lisbon'
 
   return (
@@ -95,7 +97,7 @@ export default async function AuditorIndexPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <StatusBadge status={inv.status} t={t} />
+                    <StatusBadge status={inv.status} t={t} savings={savingsMap.get(inv.id)} />
                     <ArrowRight className="h-4 w-4 text-muted-foreground" />
                   </div>
                 </Link>
@@ -113,11 +115,22 @@ type AuditorTranslator = Awaited<ReturnType<typeof getTranslations<'auditor'>>>
 function StatusBadge({
   status,
   t,
+  savings,
 }: {
   status: 'pending' | 'processed' | 'error'
   t: AuditorTranslator
+  savings?: { savingsEur: number; savingsPct: number }
 }) {
-  if (status === 'processed') return <Badge variant="default">{t('status.done')}</Badge>
+  if (status === 'processed') {
+    if (savings && savings.savingsEur >= 1) {
+      return (
+        <Badge variant="default" className="tabular-nums">
+          ↓ {savings.savingsEur.toFixed(2)}€
+        </Badge>
+      )
+    }
+    return <Badge variant="default">{t('status.done')}</Badge>
+  }
   if (status === 'error') return <Badge variant="spike">{t('status.failed')}</Badge>
   return <Badge variant="muted">{t('status.processing')}</Badge>
 }

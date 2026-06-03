@@ -16,6 +16,12 @@ type Events = {
       now?: string
     }
   }
+  'voltwise/alerts.daily': {
+    data: {
+      /** Optional reference time (ISO). "Tomorrow" is the next local day from here. */
+      now?: string
+    }
+  }
 }
 
 export const inngest = new Inngest({

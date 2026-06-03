@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { AuditRow, InvoiceRow } from '@/lib/db/invoice-queries'
+import { EredesUpload } from './eredes-upload'
+import { ReauditButton } from './reaudit-button'
 
 interface ComparisonDetail {
   tariff_id: string
@@ -41,7 +43,7 @@ interface Detail {
     tariffType: string
     confidence: number
   }
-  consumption_source: 'invoice' | 'synthetic'
+  consumption_source: 'invoice' | 'synthetic' | 'eredes_csv'
   comparisons: ComparisonDetail[]
 }
 
@@ -56,6 +58,7 @@ export function AuditResult({ invoice, audit }: { invoice: InvoiceRow; audit: Au
   const savings = Number(audit.savings_eur)
   const savingsPct = Number(audit.savings_pct)
   const annualSavings = savings * (12 / Math.max(1, detail.comparisons[0]?.breakdown?.monthsInPeriod ?? 1))
+  const isBestIndexed = detail.comparisons[0]?.tariff_type === 'indexed'
 
   const isWin = savings > 0
   const headlineColor = isWin ? 'text-primary' : 'text-muted-foreground'
@@ -63,12 +66,15 @@ export function AuditResult({ invoice, audit }: { invoice: InvoiceRow; audit: Au
 
   return (
     <div className="container max-w-4xl py-12">
-      <Link
-        href="/auditor"
-        className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition hover:text-foreground"
-      >
-        {t('back')}
-      </Link>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Link
+          href="/auditor"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition hover:text-foreground"
+        >
+          {t('back')}
+        </Link>
+        <ReauditButton invoiceId={invoice.id} />
+      </div>
 
       {/* Hero */}
       <motion.div
@@ -88,6 +94,8 @@ export function AuditResult({ invoice, audit }: { invoice: InvoiceRow; audit: Au
           <Badge variant="muted">{detail.extraction.totalKwh.toFixed(0)} kWh</Badge>
           {detail.consumption_source === 'synthetic' ? (
             <Badge variant="muted">{t('syntheticBadge')}</Badge>
+          ) : detail.consumption_source === 'eredes_csv' ? (
+            <Badge variant="default">{t('eredesBadge')}</Badge>
           ) : (
             <Badge variant="default">{t('realDataBadge')}</Badge>
           )}
@@ -139,7 +147,10 @@ export function AuditResult({ invoice, audit }: { invoice: InvoiceRow; audit: Au
                 {t('annualSavings')}
               </div>
               <div className="num mt-1 text-2xl font-semibold tracking-tight text-primary">
-                {fmt(annualSavings)} {t('annualSuffix', { pct: savingsPct.toFixed(1) })}
+                {fmt(annualSavings)}{' '}
+                {isBestIndexed
+                  ? t('annualSuffixIndexed', { pct: savingsPct.toFixed(1) })
+                  : t('annualSuffix', { pct: savingsPct.toFixed(1) })}
               </div>
             </div>
             <Button asChild>
@@ -213,6 +224,10 @@ export function AuditResult({ invoice, audit }: { invoice: InvoiceRow; audit: Au
         </CardContent>
       </Card>
 
+      {detail.consumption_source === 'synthetic' ? (
+        <EredesUpload invoiceId={invoice.id} />
+      ) : null}
+
       <p className="mt-6 text-xs text-muted-foreground">
         {t('footnote')}{' '}
         {detail.extraction.confidence < 0.8 ? (
@@ -230,7 +245,7 @@ export function AuditResult({ invoice, audit }: { invoice: InvoiceRow; audit: Au
 }
 
 function formatEur(n: number, locale: string): string {
-  const tag = locale === 'es' ? 'es-ES' : 'pt-PT'
+  const tag = locale === 'es' ? 'es-ES' : locale === 'en' ? 'en-GB' : 'pt-PT'
   return new Intl.NumberFormat(tag, {
     style: 'currency',
     currency: 'EUR',

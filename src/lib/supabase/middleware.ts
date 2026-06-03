@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from 'next/server'
  * Routes that require an authenticated session.
  * The dashboard is intentionally NOT here — public OMIE data should be browseable.
  */
-const PROTECTED_PREFIXES = ['/auditor', '/alerts', '/settings', '/onboarding']
+const PROTECTED_PREFIXES = ['/auditor', '/alerts', '/settings', '/onboarding', '/plan']
 
 /** Routes that should redirect away when already signed in. */
 const AUTH_PREFIXES = ['/signin']
@@ -40,6 +40,18 @@ export async function updateSession(request: NextRequest) {
       },
     },
   })
+
+  // Forward PKCE code to /auth/callback if Supabase redirected to the wrong page.
+  const code = request.nextUrl.searchParams.get('code')
+  if (code && request.nextUrl.pathname !== '/auth/callback') {
+    const target = request.nextUrl.clone()
+    const next = target.pathname === '/' ? '/dashboard' : target.pathname
+    target.pathname = '/auth/callback'
+    target.search = ''
+    target.searchParams.set('code', code)
+    target.searchParams.set('next', next)
+    return NextResponse.redirect(target)
+  }
 
   // IMPORTANT: do not run any code between createServerClient and getUser —
   // doing so risks logging users out at random.

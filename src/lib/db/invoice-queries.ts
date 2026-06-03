@@ -142,6 +142,107 @@ export async function setInvoiceStatus(
   if (error) throw error
 }
 
+export interface InvoiceSavingsSummary {
+  invoiceId: string
+  savingsEur: number
+  savingsPct: number
+}
+
+/**
+ * For a list of invoice IDs, returns the latest audit's savings summary for each.
+ * Results are deduplicated client-side (one entry per invoice, most recent audit wins).
+ */
+export async function getLatestAuditSavingsByInvoiceIds(
+  client: SupabaseClient,
+  invoiceIds: string[],
+): Promise<Map<string, InvoiceSavingsSummary>> {
+  if (invoiceIds.length === 0) return new Map()
+
+  const { data, error } = await client
+    .from('audits')
+    .select('invoice_id, savings_eur, savings_pct, created_at')
+    .in('invoice_id', invoiceIds)
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+
+  const map = new Map<string, InvoiceSavingsSummary>()
+  for (const row of data ?? []) {
+    if (!map.has(row.invoice_id)) {
+      map.set(row.invoice_id, {
+        invoiceId: row.invoice_id,
+        savingsEur: Number(row.savings_eur),
+        savingsPct: Number(row.savings_pct),
+      })
+    }
+  }
+  return map
+}
+
+export interface LatestUserAudit {
+  auditId: string
+  invoiceId: string
+  provider: string | null
+  periodStart: string | null
+  periodEnd: string | null
+  baselineCostEur: number
+  projectedCostEur: number
+  savingsEur: number
+  savingsPct: number
+  alternativeTariffProvider: string | null
+  alternativeTariffName: string | null
+  createdAt: string
+}
+
+/**
+ * Returns the single most recent audit row for the user, joined with the
+ * invoice's provider/period and the alternative tariff's provider+name.
+ * Uses RLS-enforced client — never returns data for other users.
+ */
+export async function getLatestAuditForUser(
+  client: SupabaseClient,
+  userId: string,
+): Promise<LatestUserAudit | null> {
+  const { data, error } = await client
+    .from('audits')
+    .select(`
+      id,
+      invoice_id,
+      baseline_cost_eur,
+      projected_cost_eur,
+      savings_eur,
+      savings_pct,
+      created_at,
+      invoices!inner ( provider, period_start, period_end ),
+      tariffs ( provider, name )
+    `)
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (error) throw error
+  if (!data) return null
+
+  const inv = Array.isArray(data.invoices) ? data.invoices[0] : data.invoices
+  const tar = Array.isArray(data.tariffs) ? data.tariffs[0] : data.tariffs
+
+  return {
+    auditId: data.id,
+    invoiceId: data.invoice_id,
+    provider: inv?.provider ?? null,
+    periodStart: inv?.period_start ?? null,
+    periodEnd: inv?.period_end ?? null,
+    baselineCostEur: Number(data.baseline_cost_eur),
+    projectedCostEur: Number(data.projected_cost_eur),
+    savingsEur: Number(data.savings_eur),
+    savingsPct: Number(data.savings_pct),
+    alternativeTariffProvider: tar?.provider ?? null,
+    alternativeTariffName: tar?.name ?? null,
+    createdAt: data.created_at,
+  }
+}
+
 export async function insertAudit(
   client: SupabaseClient,
   row: {

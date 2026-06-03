@@ -6,6 +6,7 @@ import { fetchEnergyChartsDay } from '@/lib/ingestion/energycharts'
 import { createSupabaseService } from '@/lib/supabase/server'
 import { runAudit } from '@/lib/auditor/audit'
 import { evaluateAndDispatchAll } from '@/lib/alerts/dispatch'
+import { runDailyAnchors } from '@/lib/alerts/daily-runner'
 import { inngest } from './client'
 
 /**
@@ -146,10 +147,42 @@ export const evaluateAlertsManual = inngest.createFunction(
   },
 )
 
+/**
+ * Daily ANCHOR engine.
+ * Fires once a day, AFTER tomorrow's day-ahead prices are loaded. OMIE publishes the
+ * auction ~13:00 CET; our own `ingestOmieDaily` lands them at 14:30 Madrid. We run at
+ * 15:00 Madrid so tomorrow's full FINAL curve is guaranteed present in `market_prices`
+ * before we build anyone's anchor (vs the ~12:45 publish-time the planner UI quotes —
+ * we deliberately wait for the ingest, not just the publish, to avoid an empty curve).
+ *
+ * Per active-alert user it builds tomorrow's FINAL curve and sends, in their locale and
+ * euros only, the right message: the charging-window anchor, free/near-free energy, or a
+ * price spike to avoid. Idempotent within a 12h window (one run/day).
+ */
+export const sendDailyAnchor = inngest.createFunction(
+  { id: 'send-daily-anchor', retries: 1 },
+  { cron: 'TZ=Europe/Madrid 0 15 * * *' },
+  async ({ step }) => {
+    return step.run('run-daily-anchors', () => runDailyAnchors({ now: new Date() }))
+  },
+)
+
+/** Manual / replay trigger for the daily anchor (tests, ops backfill). */
+export const sendDailyAnchorManual = inngest.createFunction(
+  { id: 'send-daily-anchor-manual', retries: 1 },
+  { event: 'voltwise/alerts.daily' },
+  async ({ event, step }) => {
+    const now = event.data.now ? new Date(event.data.now) : new Date()
+    return step.run('run-daily-anchors', () => runDailyAnchors({ now }))
+  },
+)
+
 export const functions = [
   ingestOmieDaily,
   ingestOmieManual,
   processInvoice,
   evaluateAlerts,
   evaluateAlertsManual,
+  sendDailyAnchor,
+  sendDailyAnchorManual,
 ]

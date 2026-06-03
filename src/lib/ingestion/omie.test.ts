@@ -31,17 +31,17 @@ const SAMPLE = `MARGINALPDBC;14/05/2024;
 *`
 
 describe('omieUrl', () => {
-  it('builds the canonical PBC URL with zero-padded month/day', () => {
+  it('builds the file-download URL with zero-padded month/day', () => {
     const d = new Date(Date.UTC(2024, 4, 14)) // 2024-05-14
     expect(omieUrl(d)).toBe(
-      'https://www.omie.es/sites/default/files/dados/AGNO_2024/MES_05/TXT/marginalpdbc_20240514.1',
+      'https://www.omie.es/es/file-download?parents=marginalpdbc&filename=marginalpdbc_20240514.1',
     )
   })
 
   it('handles January (single-digit month)', () => {
     const d = new Date(Date.UTC(2024, 0, 1)) // 2024-01-01
     expect(omieUrl(d)).toBe(
-      'https://www.omie.es/sites/default/files/dados/AGNO_2024/MES_01/TXT/marginalpdbc_20240101.1',
+      'https://www.omie.es/es/file-download?parents=marginalpdbc&filename=marginalpdbc_20240101.1',
     )
   })
 })
@@ -95,9 +95,10 @@ describe('parseOmie', () => {
     expect(() => parseOmie('FOO;bar;\n2024;05;14;01;1,0;1,0;\n*')).toThrow(OmieParseError)
   })
 
-  it('rejects when expectedDate does not match header', () => {
+  it('rejects when expectedDate does not match the file date', () => {
     const expected = new Date(Date.UTC(2024, 4, 15))
-    expect(() => parseOmie(SAMPLE, expected)).toThrow(/Header date/)
+    // Header no longer carries a date; the check now runs against the first data row.
+    expect(() => parseOmie(SAMPLE, expected)).toThrow(/does not match expected/)
   })
 
   it('accepts expectedDate when it matches', () => {
@@ -107,6 +108,52 @@ describe('parseOmie', () => {
 
   it('tolerates trailing * end marker and blank lines', () => {
     const rows = parseOmie(SAMPLE)
+    expect(rows.every((r) => Number.isFinite(r.priceEurMwh))).toBe(true)
+  })
+})
+
+// ── Current OMIE format (2026): no header date, 96 quarter-hourly periods. ──────────
+// We build it programmatically so the per-hour means are easy to reason about: each hour H
+// (0-based) has its four quarters set to [H, H, H, H]+offsets averaging exactly H+0.5.
+function quarterHourlySample(): string {
+  const lines = ['MARGINALPDBC;']
+  for (let p = 1; p <= 96; p++) {
+    const hour = Math.floor((p - 1) / 4) // 0..23
+    const q = (p - 1) % 4 // 0..3
+    // Quarter values hour-1, hour, hour+1, hour+2 → mean = hour + 0.5 exactly.
+    const price = hour - 1 + q
+    lines.push(`2026;05;15;${p};${price.toFixed(2)};${price.toFixed(2)};`)
+  }
+  lines.push('*')
+  return lines.join('\n')
+}
+
+describe('parseOmie — quarter-hourly (current OMIE format)', () => {
+  const QH = quarterHourlySample()
+
+  it('aggregates 96 periods into 24 hourly rows × 2 zones = 48 rows', () => {
+    expect(parseOmie(QH)).toHaveLength(48)
+  })
+
+  it('hourly price is the mean of that hour’s four quarters', () => {
+    const rows = parseOmie(QH)
+    // Hour 10 quarters = [9,10,11,12] → mean 10.5. Find the PT row at Madrid-local hour 10.
+    // 15 May 2026 is CEST (UTC+2), so local 10:00 = 08:00 UTC.
+    const h10 = rows.find((r) => r.zone === 'PT' && r.ts.toISOString() === '2026-05-15T08:00:00.000Z')
+    expect(h10?.priceEurMwh).toBeCloseTo(10.5, 6)
+  })
+
+  it('still works with a header that has no date', () => {
+    expect(() => parseOmie(QH)).not.toThrow()
+  })
+
+  it('validates expectedDate against the data rows in the dateless format', () => {
+    expect(() => parseOmie(QH, new Date(Date.UTC(2026, 4, 15)))).not.toThrow()
+    expect(() => parseOmie(QH, new Date(Date.UTC(2026, 4, 16)))).toThrow(/does not match expected/)
+  })
+
+  it('accepts dot decimals (the new endpoint emits them)', () => {
+    const rows = parseOmie(QH)
     expect(rows.every((r) => Number.isFinite(r.priceEurMwh))).toBe(true)
   })
 })

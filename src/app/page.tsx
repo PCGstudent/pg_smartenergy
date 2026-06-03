@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
+import { AuthHashHandler } from '@/components/auth/auth-hash-handler'
 import { ArrowRight, Bell, FileText, LineChart, Sparkles, Zap } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -17,6 +18,7 @@ export default async function LandingPage() {
 
   return (
     <div className="relative">
+      <AuthHashHandler />
       <section className="container relative pt-20 pb-20 md:pt-28 md:pb-28">
         <HeroReveal>
           <div className="mx-auto max-w-3xl text-center">

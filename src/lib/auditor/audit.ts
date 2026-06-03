@@ -58,9 +58,17 @@ type AuditStage =
 export async function runAudit(invoiceId: string): Promise<AuditOutcome> {
   const supa = createSupabaseService()
 
-  // 1. Fetch invoice row.
+  // 1. Fetch invoice row + user's contracted kVA setting.
   const invoice = await wrap('fetch-invoice', () => getInvoiceById(supa, invoiceId))
   if (!invoice) throw new AuditError(`Invoice ${invoiceId} not found`, 'fetch-invoice')
+
+  const { data: profileRow } = await supa
+    .from('profiles')
+    .select('contracted_kva')
+    .eq('id', invoice.user_id)
+    .maybeSingle()
+  const profileKva: number | undefined =
+    profileRow?.contracted_kva != null ? Number(profileRow.contracted_kva) : undefined
 
   try {
     // 2. Download the PDF.
@@ -128,6 +136,7 @@ export async function runAudit(invoiceId: string): Promise<AuditOutcome> {
       prices,
       periodStart: extraction.periodStart,
       periodEnd: extraction.periodEnd,
+      contractedKva: profileKva ?? extraction.contractedPowerKw ?? undefined,
     })
     if (comparisons.length === 0) {
       throw new AuditError('No tariff yielded a valid comparison.', 'compute-savings')
@@ -197,6 +206,7 @@ interface CompareInput {
   prices: { ts: Date; priceEurMwh: number }[]
   periodStart: string
   periodEnd: string
+  contractedKva?: number
 }
 
 interface Comparison {
@@ -214,6 +224,7 @@ function compareAgainstAll(input: CompareInput): Comparison[] {
         prices: input.prices,
         periodStart: input.periodStart,
         periodEnd: input.periodEnd,
+        contractedKva: input.contractedKva,
       }
       const savings = computeSavingsAgainstActual(input.baselineEur, altInput)
       out.push({ tariff, savings })

@@ -62,7 +62,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${GeistSans.variable} ${GeistMono.variable} dark`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen font-sans antialiased">
+      <body className="min-h-screen overflow-x-hidden font-sans antialiased">
         <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Madrid">
           <RegisterSW />
           <SiteNav />
