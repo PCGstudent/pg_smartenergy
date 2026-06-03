@@ -60,3 +60,5 @@ public/workbox-*.js
 public/workbox-*.js.map
 
 .vercel
+.uxdev.log
+.smoketest*.log
