@@ -2,6 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "regions": ["fra1"],
+  "crons": [
+    {
+      "path": "/api/ingest/omie",
+      "schedule": "30 11 * * *"
+    }
+  ],
   "functions": {
     "src/app/api/inngest/route.ts": {
       "maxDuration": 60
