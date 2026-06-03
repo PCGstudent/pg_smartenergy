@@ -498,6 +498,7 @@
     "kicker": "Hoy y Mañana",
     "title": "Tu plan de carga",
     "subtitle": "Tomamos los precios de mañana del mercado diario y tus electrodomésticos, y te decimos la hora más barata para encender cada uno — en euros sobre tu precio final, no en megavatios-hora mayoristas.",
+    "todayNote": "Los precios de mañana aún no han salido (el mercado diario publica sobre las 13h). Por ahora te mostramos el plan para el resto de hoy — vuelve más tarde para planificar el día completo de mañana.",
     "best": {
       "kicker": "Mejor franja mañana",
       "body": "Enciéndelo {date} empezando en esta franja — tu precio final ronda los {price} de media, unos {cost} por el ciclo completo.",

@@ -498,6 +498,7 @@
     "kicker": "Today & Tomorrow",
     "title": "Your charging plan",
     "subtitle": "We take tomorrow's day-ahead prices and your appliances, then tell you the cheapest hour to run each one — in euros on your final price, not wholesale megawatt-hours.",
+    "todayNote": "Tomorrow's prices aren't out yet (the day-ahead market publishes around 1pm). For now we're showing your plan for the rest of today — check back later to plan tomorrow in full.",
     "best": {
       "kicker": "Best window tomorrow",
       "body": "Run it {date} starting in this window — your all-in price averages {price}, about {cost} for the full run.",

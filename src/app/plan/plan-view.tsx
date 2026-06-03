@@ -31,6 +31,8 @@ interface Props {
   allAppliances: Appliance[]
   zone: 'PT' | 'ES'
   planDateLabel: string
+  /** True when showing TODAY (tomorrow's day-ahead isn't published yet). */
+  planningToday: boolean
   tariffMissing: boolean
   monthlySummary: MonthlySavingSummary | null
   savingsSummary: SavingsSummary | null
@@ -47,6 +49,7 @@ export function PlanView({
   allAppliances,
   zone,
   planDateLabel,
+  planningToday,
   tariffMissing,
   monthlySummary,
   savingsSummary,
@@ -78,6 +81,14 @@ export function PlanView({
 
   return (
     <div className="space-y-8">
+      {/* Showing today (tomorrow's day-ahead not published yet) — tell the user so the
+          date label makes sense and they know a fuller plan lands later. */}
+      {planningToday ? (
+        <div className="rounded-xl border border-primary/25 bg-primary/5 px-4 py-3 text-sm text-muted-foreground">
+          {t('todayNote')}
+        </div>
+      ) : null}
+
       {/* Cumulative "já poupaste X€" ledger — the realized running total. */}
       {savingsSummary ? <SavingsLedgerCard summary={savingsSummary} /> : null}
 

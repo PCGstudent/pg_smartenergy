@@ -8,7 +8,7 @@ import { listAppliancesForUser, type Appliance } from '@/lib/db/appliance-querie
 import { buildDayPlan, type PlanAppliance } from '@/lib/pricing/plan-builder'
 import { buildMonthlySavingSummary } from '@/lib/pricing/plan-monthly'
 import { loadSavingsSummary } from '@/lib/pricing/savings-summary'
-import { tomorrowWindow } from '@/lib/pricing/day-window'
+import { tomorrowWindow, localDayWindow } from '@/lib/pricing/day-window'
 import { resolvePlanTariff } from '@/lib/pricing/plan-tariff'
 import { PlanView } from './plan-view'
 
@@ -39,17 +39,27 @@ export default async function PlanPage() {
     getLocale(),
   ])
 
-  // Prospective window: tomorrow's full LOCAL day → UTC bounds.
-  const planWindow = tomorrowWindow(new Date(), timeZone)
-  // getPricesInRange's upper bound is EXCLUSIVE, so passing `endUtc` (the next day's
-  // 00:00) naturally excludes that row — no off-by-one workaround needed.
+  // The planner is prospective — it prefers TOMORROW's full local day (day-ahead prices
+  // publish ~13:00). But a user who opens the app before tomorrow's auction has landed
+  // should still see value, NOT an empty "prices not out yet" wall. So: try tomorrow first;
+  // if it has no prices, fall back to TODAY's window so there's always something to act on.
+  const now = new Date()
+  const tomorrow = tomorrowWindow(now, timeZone)
+  const today = localDayWindow(now, timeZone)
 
-  const [prices, appliances, tariff, savingsSummary] = await Promise.all([
-    getPricesInRange(zone, planWindow.startUtc, planWindow.endUtc).catch(() => []),
+  const [tomorrowPrices, appliances, tariff, savingsSummary] = await Promise.all([
+    getPricesInRange(zone, tomorrow.startUtc, tomorrow.endUtc).catch(() => []),
     listAppliancesForUser(supa, session.user.id).catch(() => [] as Appliance[]),
     resolvePlanTariff(supa, session.user.id, zone).catch(() => null),
     loadSavingsSummary(supa, session.user.id, timeZone).catch(() => null),
   ])
+
+  // Fall back to today only when tomorrow isn't published yet.
+  const planningToday = tomorrowPrices.length === 0
+  const planWindow = planningToday ? today : tomorrow
+  const prices = planningToday
+    ? await getPricesInRange(zone, today.startUtc, today.endUtc).catch(() => [])
+    : tomorrowPrices
 
   const activeAppliances = appliances.filter((a) => a.active)
   const hasPrices = prices.length > 0
@@ -111,6 +121,7 @@ export default async function PlanPage() {
         allAppliances={appliances}
         zone={zone}
         planDateLabel={planDateLabel}
+        planningToday={planningToday}
         tariffMissing={tariffMissing}
         monthlySummary={monthlySummary}
         savingsSummary={savingsSummary}

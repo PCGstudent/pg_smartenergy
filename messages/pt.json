@@ -498,6 +498,7 @@
     "kicker": "Hoje & Amanhã",
     "title": "O teu plano de carga",
     "subtitle": "Pegamos nos preços de amanhã do mercado diário e nos teus equipamentos, e dizemos-te a hora mais barata para ligar cada um — em euros sobre o teu preço final, não em megawatts-hora grossistas.",
+    "todayNote": "Os preços de amanhã ainda não saíram (o mercado diário publica por volta das 13h). Por agora, mostramos-te o plano para o resto de hoje — volta mais logo para planeares o dia completo de amanhã.",
     "best": {
       "kicker": "Melhor janela amanhã",
       "body": "Liga {date} a começar nesta janela — o teu preço final ronda os {price} de média, cerca de {cost} pelo ciclo completo.",
